@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<pmd version="4.3" timestamp="2013-05-19T22:26:28.847">
-<file name="D:\studia\agh\8semestr\iosr\proj\virtgraph\src\main\java\pl\edu\agh\iosr\virtgraph\runner\DbRunner.java">
-<violation beginline="108" endline="108" begincolumn="9" endcolumn="26" rule="SystemPrintln" ruleset="Java Logging Rules" package="pl.edu.agh.iosr.virtgraph.runner" class="DbRunner" method="createDatabase" externalInfoUrl="http://pmd.sourceforge.net/rules/logging-java.html#SystemPrintln" priority="2">
-System.out.print is used
-</violation>
-</file>
-</pmd>
