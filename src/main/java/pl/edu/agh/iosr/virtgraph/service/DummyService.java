@@ -1,5 +1,7 @@
 package pl.edu.agh.iosr.virtgraph.service;
 
+import pl.edu.agh.iosr.virtgraph.model.ParagonZaLas;
+
 public interface DummyService {
-    public String zaplacZaLas();
+    public ParagonZaLas zaplacZaLas(int ile);
 }
