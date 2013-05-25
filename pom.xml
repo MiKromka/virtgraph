@@ -84,6 +84,11 @@
 			        <groupId>org.mortbay.jetty</groupId>
 			        <artifactId>maven-jetty-plugin</artifactId>
 			        <version>6.1.10</version>
+			        <configuration>
+		                <scanIntervalSeconds>10</scanIntervalSeconds>
+		                <stopKey>foo</stopKey>
+		                <stopPort>9999</stopPort>
+			        </configuration>
                     <executions>
 		                <execution>
 		                        <id>start-jetty</id>
@@ -199,6 +204,14 @@
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
+        
+        <!--  virtualbox deps-->
+	    <dependency>
+			<groupId>org.virtualbox</groupId>
+			<artifactId>vboxjws</artifactId>
+			<version>4.2.8</version>
+		</dependency>
+        
         
         <!-- test -->
         <dependency>

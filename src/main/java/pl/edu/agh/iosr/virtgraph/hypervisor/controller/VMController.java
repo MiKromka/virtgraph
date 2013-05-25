@@ -1,4 +1,4 @@
-package pl.edu.agh.virtgraph.hypervisor.conrtoller;
+package pl.edu.agh.iosr.virtgraph.hypervisor.controller;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
