@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.virtualbox_4_2.VirtualBoxManager;
 
+import pl.edu.agh.iosr.virtgraph.hypervisor.communicator.ServerCommunicator;
 import pl.edu.agh.iosr.virtgraph.model.VirtualMachine;
 
 @Service
@@ -16,6 +17,9 @@ public class VirtualboxService implements VirtualMachineService {
     
     @Autowired
     VirtualBoxManager vBoxManager;
+    
+    @Autowired
+    ServerCommunicator srvCommunicator;
 
     public void start(VirtualMachine vm) {
         LOGGER.debug("Starting a virtualmachine :" + vm);
