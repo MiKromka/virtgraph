@@ -5,7 +5,7 @@ public class Properties {
 	private final static String RELATIVE_SERVER_LOCATION = "/virtgraph/dummy/host";
 	private final static boolean REGISTER_ON_STARTUP= false;
 
-	public static boolean isRetisteronstartup() {
+	public static boolean isRegisterOnStartup() {
 		return REGISTER_ON_STARTUP;
 	}
 

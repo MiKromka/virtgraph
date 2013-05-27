@@ -29,7 +29,7 @@ public class RESTServerCommunicator implements ServerCommunicator{
 	@Override
 	@PostConstruct
 	public void registerHost() throws CouldNotRegisterException {
-		if (Properties.isRetisteronstartup())
+		if (Properties.isRegisterOnStartup())
 		{
 			/*TODO: add sensible properties to the Host instance*/
 			Host host = new Host("hostName");
