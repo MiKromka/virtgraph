@@ -1,67 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
-	<!-- The definition of the Root Spring Container shared by all Servlets and Filters -->
-	<context-param>
-		<param-name>contextConfigLocation</param-name>
-		<param-value>/WEB-INF/spring/root-context.xml</param-value>
-	</context-param>
-	
-	<!-- Creates the Spring Container shared by all Servlets and Filters -->
-	<listener>
-		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-	</listener>
-    
-    
-    
-	<!-- currently just a dummy servlet to serve as an example -->
+    <!-- The definition of the Root Spring Container shared by all Servlets and Filters -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/spring/root-context.xml</param-value>
+    </context-param>
+
+    <!-- Creates the Spring Container shared by all Servlets and Filters -->
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+
+
+    <!-- currently just a dummy servlet to serve as an example -->
     <servlet>
         <servlet-name>appServlet</servlet-name>
-        <servlet-class>
-            com.sun.jersey.spi.spring.container.servlet.SpringServlet
-        </servlet-class>
+        <servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
         <init-param>
-            <param-name>
-                com.sun.jersey.config.property.packages
-            </param-name>
+            <param-name>com.sun.jersey.config.property.packages</param-name>
             <param-value>pl.edu.agh.iosr.virtgraph.controller</param-value>
         </init-param>
         <init-param>
-			<param-name>contextConfigLocation</param-name>
-			<param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
         </init-param>
-        <load-on-startup>2</load-on-startup>
+        <load-on-startup>3</load-on-startup>
     </servlet>
-    
+
     <!-- hypervisor servlet -->
     <servlet>
         <servlet-name>hypervisorServlet</servlet-name>
-        <servlet-class>
-            com.sun.jersey.spi.spring.container.servlet.SpringServlet
-        </servlet-class>
+        <servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
         <init-param>
-            <param-name>
-                com.sun.jersey.config.property.packages
-            </param-name>
+            <param-name>com.sun.jersey.config.property.packages</param-name>
             <param-value>pl.edu.agh.iosr.virtgraph.hypervisor.controller</param-value>
         </init-param>
         <init-param>
-			<param-name>contextConfigLocation</param-name>
-			<param-value>/WEB-INF/spring/hypervisorServlet/servlet-context.xml</param-value>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>/WEB-INF/spring/hypervisorServlet/servlet-context.xml</param-value>
+        </init-param>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
+    <!-- server servlet -->
+    <servlet>
+        <servlet-name>serverServlet</servlet-name>
+        <servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
+        <init-param>
+            <param-name>com.sun.jersey.config.property.packages</param-name>
+            <param-value>pl.edu.agh.iosr.virtgraph.server.controller</param-value>
+        </init-param>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>/WEB-INF/spring/serverServlet/servlet-context.xml</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
- 
+
     <servlet-mapping>
-		<servlet-name>appServlet</servlet-name>
+        <servlet-name>appServlet</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
-		
+
     <servlet-mapping>
- 	<servlet-name>hypervisorServlet</servlet-name>
-        <url-pattern>/hypervisor/</url-pattern>
+        <servlet-name>hypervisorServlet</servlet-name>
+        <url-pattern>/hypervisor/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>serverServlet</servlet-name>
+        <url-pattern>/server/*</url-pattern>
     </servlet-mapping>
 
 </web-app>

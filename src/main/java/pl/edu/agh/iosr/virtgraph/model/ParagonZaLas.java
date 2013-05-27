@@ -8,6 +8,7 @@ public class ParagonZaLas {
 	private String test;
 
 	public ParagonZaLas() {
+		//
 	}
 
 	public ParagonZaLas(int ile, String test) {
