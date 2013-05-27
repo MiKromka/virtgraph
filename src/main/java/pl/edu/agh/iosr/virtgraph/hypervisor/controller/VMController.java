@@ -17,23 +17,23 @@ import pl.edu.agh.iosr.virtgraph.model.VirtualMachine;
 @Path("/vm")
 public class VMController {
 
-    @Autowired
-    VirtualMachineService vmService;
+	@Autowired
+	VirtualMachineService vmService;
 
-    @POST
-    @Path("/start")
-    @Consumes("application/xml")
-    @Produces("text/plain")
-    public String startVm(VirtualMachine vm) {
-        vmService.start(vm);
-        return "not implemented yet";
-    }
+	@POST
+	@Path("/start")
+	@Consumes("application/xml")
+	@Produces("text/plain")
+	public String startVm(VirtualMachine vm) {
+		vmService.start(vm);
+		return "not implemented yet";
+	}
 
-    @GET
-    @Path("/getinfo/{id}")
-    @Produces("application/xml")
-    public VirtualMachine getInfo(@PathParam("id") int id) {
-        return new VirtualMachine("testVirtualMachine");
-    }
+	@GET
+	@Path("/getinfo/{id}")
+	@Produces("application/xml")
+	public VirtualMachine getInfo(@PathParam("id") int id) {
+		return new VirtualMachine("testVirtualMachine");
+	}
 
 }

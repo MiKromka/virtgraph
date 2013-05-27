@@ -21,44 +21,47 @@ import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 
 @Component
-public class RESTServerCommunicator implements ServerCommunicator{
+public class RESTServerCommunicator implements ServerCommunicator {
 
 	private final static Logger LOGGER = LoggerFactory
-            .getLogger(RESTServerCommunicator.class);
-	
+			.getLogger(RESTServerCommunicator.class);
+
 	@Override
 	@PostConstruct
 	public void registerHost() throws CouldNotRegisterException {
-		if (Properties.isRegisterOnStartup())
-		{
-			/*TODO: add sensible properties to the Host instance*/
+		if (Properties.isRegisterOnStartup()) {
+			/* TODO: add sensible properties to the Host instance */
 			Host host = new Host("hostName");
-			
-			
-			URI baseURI =  UriBuilder.fromUri(Properties.getServerAddress()).build();
+
+			URI baseURI = UriBuilder.fromUri(Properties.getServerAddress())
+					.build();
 			ClientConfig config = new DefaultClientConfig();
 			Client client = Client.create(config);
 			WebResource service = client.resource(baseURI);
-			ClientResponse response = service.path("host").type(MediaType.APPLICATION_XML)
-					.entity(host).post(ClientResponse.class);
-			if (response.getStatus() >=300)
-			{
+			ClientResponse response = service.path("host")
+					.type(MediaType.APPLICATION_XML).entity(host)
+					.post(ClientResponse.class);
+			if (response.getStatus() >= 300) {
 				LOGGER.debug("Failed to register on the server");
 				throw new CouldNotRegisterException();
-			}
-			else
+			} else {
 				LOGGER.debug("Successfully registered on the server. Response status code:"
 						+ response.getStatus());
+			}
+		} else {
+			LOGGER.debug("REGISTER_ON_STARTUP property is not set.");
 		}
-		else
-				LOGGER.debug("REGISTER_ON_STARTUP property is not set.");
-		
-/*		// Get plain text // Get plain text
-		System.out.println(service.path("rest").path("hello").accept(MediaType.TEXT_PLAIN).get(String.class));
-		// Get XML
-		System.out.println(service.path("rest").path("hello").accept(MediaType.TEXT_XML).get(String.class));
-		// The HTML
-		System.out.println(service.path("rest").path("hello").accept(MediaType.TEXT_HTML).get(String.class));
-*/
+
+		/*
+		 * // Get plain text // Get plain text
+		 * System.out.println(service.path("rest"
+		 * ).path("hello").accept(MediaType.TEXT_PLAIN).get(String.class)); //
+		 * Get XML
+		 * System.out.println(service.path("rest").path("hello").accept(MediaType
+		 * .TEXT_XML).get(String.class)); // The HTML
+		 * System.out.println(service.
+		 * path("rest").path("hello").accept(MediaType
+		 * .TEXT_HTML).get(String.class));
+		 */
 	}
 }

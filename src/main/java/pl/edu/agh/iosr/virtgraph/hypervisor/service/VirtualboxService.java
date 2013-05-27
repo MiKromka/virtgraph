@@ -12,19 +12,18 @@ import pl.edu.agh.iosr.virtgraph.model.VirtualMachine;
 @Service
 public class VirtualboxService implements VirtualMachineService {
 
-    private final static Logger LOGGER = LoggerFactory
-            .getLogger(VirtualboxService.class);
-    
-    @Autowired
-    VirtualBoxManager vBoxManager;
-    
-    @Autowired
-    ServerCommunicator srvCommunicator;
+	private final static Logger LOGGER = LoggerFactory
+			.getLogger(VirtualboxService.class);
 
-    public void start(VirtualMachine vm) {
-        LOGGER.debug("Starting a virtualmachine :" + vm);
-    }
-    
-    
+	@Autowired
+	VirtualBoxManager vBoxManager;
+
+	@Autowired
+	ServerCommunicator srvCommunicator;
+
+	@Override
+	public void start(VirtualMachine vm) {
+		LOGGER.debug("Starting a virtualmachine :" + vm);
+	}
 
 }

@@ -17,8 +17,8 @@ public class Host {
 	public Host(String name) {
 		this.name = name;
 	}
-	
-	public Host()
-	{}
+
+	public Host() {
+	}
 
 }

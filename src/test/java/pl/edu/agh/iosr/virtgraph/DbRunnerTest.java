@@ -8,20 +8,21 @@ import org.neo4j.test.TestGraphDatabaseFactory;
 
 public class DbRunnerTest {
 
-    private GraphDatabaseService graphDb;
+	private GraphDatabaseService graphDb;
 
-    @Before
-    public void prepareTestDatabase() {
-        this.graphDb = new TestGraphDatabaseFactory().newImpermanentDatabaseBuilder().newGraphDatabase();
-    }
+	@Before
+	public void prepareTestDatabase() {
+		this.graphDb = new TestGraphDatabaseFactory()
+				.newImpermanentDatabaseBuilder().newGraphDatabase();
+	}
 
-    @After
-    public void destroyTestDatabase() {
-        graphDb.shutdown();
-    }
+	@After
+	public void destroyTestDatabase() {
+		graphDb.shutdown();
+	}
 
-    @Test
-    public void shouldCreateDbGetAndRemoveData() {
+	@Test
+	public void shouldCreateDbGetAndRemoveData() {
 
-    }
+	}
 }

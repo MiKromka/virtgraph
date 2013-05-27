@@ -22,23 +22,22 @@ import pl.edu.agh.iosr.virtgraph.service.DummyService;
 @Path("/dummy")
 public class DummyController {
 
-    @Autowired
-    DummyService dummyService;
+	@Autowired
+	DummyService dummyService;
 
-    @GET
-    @Produces("application/xml")
-    @Path("/tryme/{ile}")
-    public ParagonZaLas zaplacZaLas(@PathParam("ile") int ile) {
-        return dummyService.zaplacZaLas(ile);
-    }
-    
-    @POST
-    @Path("/host")
-    @Consumes("application/xml")
-    public Response dummyHostRegistration( Host host)
-    {
-    	URI dummyURI = UriBuilder.fromUri("dummy").build();
-    	return Response.created(dummyURI).build();
-    }
+	@GET
+	@Produces("application/xml")
+	@Path("/tryme/{ile}")
+	public ParagonZaLas zaplacZaLas(@PathParam("ile") int ile) {
+		return dummyService.zaplacZaLas(ile);
+	}
+
+	@POST
+	@Path("/host")
+	@Consumes("application/xml")
+	public Response dummyHostRegistration(Host host) {
+		URI dummyURI = UriBuilder.fromUri("dummy").build();
+		return Response.created(dummyURI).build();
+	}
 
 }

@@ -4,20 +4,20 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class VirtualMachine {
-    private String name;
+	private String name;
 
-    public VirtualMachine() {
-    }
+	public VirtualMachine() {
+	}
 
-    public VirtualMachine(String name) {
-        this.name = name;
-    }
+	public VirtualMachine(String name) {
+		this.name = name;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 }
