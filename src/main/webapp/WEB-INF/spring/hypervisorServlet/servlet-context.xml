@@ -11,15 +11,16 @@
         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 		
-		<beans:bean id="virtualBoxManager" class="org.virtualbox_4_2.VirtualBoxManager"
+<!-- 		<beans:bean id="virtualBoxManager" class="org.virtualbox_4_2.VirtualBoxManager"
 					factory-method="createInstance">
 					<constructor-arg>
 						<null/>
 					</constructor-arg>
 		</beans:bean>
-	
+ -->	
 	<context:component-scan base-package="pl.edu.agh.iosr.virtgraph.hypervisor.controller, 
-		pl.edu.agh.iosr.virtgraph.hypervisor.service, pl.edu.agh.iosr.virtgraph.hypervisor.communicator"/>
+		pl.edu.agh.iosr.virtgraph.hypervisor.service, pl.edu.agh.iosr.virtgraph.hypervisor.communicator,
+        pl.edu.agh.iosr.virtgraph.hypervisor.vmmanager"/>
 		
 
 </beans>
