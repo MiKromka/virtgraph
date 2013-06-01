@@ -5,6 +5,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class Service {
 	private String name;
+	private boolean start;
+
+	public boolean isStart() {
+		return start;
+	}
+
+	public void setStart(boolean start) {
+		this.start = start;
+	}
 
 	public String getName() {
 		return name;

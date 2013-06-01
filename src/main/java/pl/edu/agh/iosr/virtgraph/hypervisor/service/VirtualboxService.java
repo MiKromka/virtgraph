@@ -19,11 +19,11 @@ public class VirtualboxService implements VirtualMachineService {
 	private final static Logger LOGGER = LoggerFactory
 			.getLogger(VirtualboxService.class);
 
+	private VirtualBoxManager vBoxManager;
+	private IVirtualBox vBox;
+
 	@Autowired
 	ServerCommunicator srvCommunicator;
-
-	private VirtualBoxManager vBoxManager;
-	private IVirtualBox vBox = null;
 
 	@PostConstruct
 	public void init() {
@@ -34,19 +34,24 @@ public class VirtualboxService implements VirtualMachineService {
 			String address = Properties.getVirtualboxHypervisorAddress();
 			vBoxManager.connect(address, user, pass);
 			vBox = vBoxManager.getVBox();
-
 		}
-
 	}
 
 	@Override
 	public void start(VirtualMachine vm) {
-		LOGGER.debug("Starting a virtualmachine :" + vm);
+		// TODO implement me
+		LOGGER.debug("Starting a virtualmachine(not implemented yet) :" + vm);
 	}
 
 	@Override
-	public void startService(pl.edu.agh.iosr.virtgraph.model.Service service,
-			int virtualMachineID) {
+	public void startService(pl.edu.agh.iosr.virtgraph.model.Service service) {
+		// TODO finish me
+
+	}
+
+	@Override
+	public void stopService(pl.edu.agh.iosr.virtgraph.model.Service service) {
+		// TODO Auto-generated method stub
 
 	}
 
