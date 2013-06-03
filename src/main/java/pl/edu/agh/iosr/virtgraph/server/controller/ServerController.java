@@ -1,7 +1,5 @@
 package pl.edu.agh.iosr.virtgraph.server.controller;
 
-import java.net.URI;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -15,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import pl.edu.agh.iosr.virtgraph.model.Host;
+import pl.edu.agh.iosr.virtgraph.model.HostList;
 import pl.edu.agh.iosr.virtgraph.model.ParagonZaLas;
 import pl.edu.agh.iosr.virtgraph.server.service.ServerService;
 
@@ -33,11 +32,22 @@ public class ServerController {
 	}
 
 	@POST
-	@Path("/host")
+	@Path("/hosts")
 	@Consumes("application/xml")
-	public Response dummyHostRegistration(Host host) {
-		URI dummyURI = UriBuilder.fromUri("dummy").build();
-		return Response.created(dummyURI).build();
+	public Response registerHost(Host host) {
+		return generateUriFromServiceResponse(serverService.registerHost(host));
+	}
+
+	@GET
+	@Produces("application/xml")
+	@Path("/hosts/")
+	public HostList getHosts() {
+		return serverService.getHostList();
+	}
+
+	private Response generateUriFromServiceResponse(String serviceResponse) {
+		return Response.created(UriBuilder.fromUri(serviceResponse).build())
+				.build();
 	}
 
 }
