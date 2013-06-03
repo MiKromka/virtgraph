@@ -12,9 +12,9 @@ public class DummyStateProvider implements StateProvider {
 
 	@Override
 	public List<Service> getAvailableServices() {
-		// FIXME
+		// FIXME!
 		ArrayList<Service> serviceList = new ArrayList<Service>();
-		serviceList.add(new Service("sshd"));
+		serviceList.add(new Service());
 		return serviceList;
 	}
 }

@@ -11,7 +11,9 @@ import org.neo4j.graphdb.index.RelationshipIndex;
 import org.neo4j.tooling.GlobalGraphOperations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class DbRunner {
 
 	private static final String DB_PATH = "D:\\dev\\lib\\neo4j-community-1.8.2";
