@@ -21,50 +21,57 @@ import pl.edu.agh.iosr.virtgraph.model.VirtualMachine;
 @Path("/vms")
 public class VMController {
 
-	@Autowired
-	VirtualMachineService vmService;
+    @Autowired
+    VirtualMachineService vmService;
 
-	@POST
-	@Path("/")
-	@Consumes("application/xml")
-	@Produces("text/plain")
-	public String startVm(VirtualMachine vm) {
-		vmService.start(vm);
-		return "not implemented yet";
-	}
+    @POST
+    @Path("/")
+    @Consumes("application/xml")
+    @Produces("text/plain")
+    public String startVm(VirtualMachine vm) {
+        vmService.start(vm);
+        return "not implemented yet";
+    }
 
-	@POST
-	@Path("/{vmid}/services")
-	@Consumes("application/xml")
-	public Response toggleService(@PathParam("vmid") int vmId, Service service) {
-		if (service.isStart()) {
-			vmService.startService(service);
-		} else {
-			vmService.stopService(service);
-		}
+    @POST
+    @Path("/{vmid}/services")
+    @Consumes("application/xml")
+    public Response toggleService(@PathParam("vmid") int vmId, Service service) {
+        if (service.isStart()) {
+            vmService.startService(service);
+        } else {
+            vmService.stopService(service);
+        }
 
-		return Response.ok().build();
-	}
+        return Response.ok().build();
+    }
 
-	@PUT
-	@Path("/{vmid}/services")
-	@Consumes("application/xml")
-	public String newService(@PathParam("vmid") int vmId, Service service) {
-		return "not implemented yet";
-	}
+    @PUT
+    @Path("/{vmid}/services")
+    @Consumes("application/xml")
+    public String newService(@PathParam("vmid") int vmId, Service service) {
+        return "not implemented yet";
+    }
 
-	@DELETE
-	@Path("/{vmid}/services")
-	@Consumes("application/xml")
-	public String deleteService(@PathParam("vmid") int vmId, Service service) {
-		return "not implemented yet";
-	}
+    @DELETE
+    @Path("/{vmid}/services")
+    @Consumes("application/xml")
+    public String deleteService(@PathParam("vmid") int vmId, Service service) {
+        return "not implemented yet";
+    }
 
-	@GET
-	@Path("/xxx/{id}")
-	@Produces("application/xml")
-	public VirtualMachine getInfo(@PathParam("id") int id) {
-		return new VirtualMachine("testVirtualMachine");
-	}
+    @GET
+    @Path("/xxx/{id}")
+    @Produces("application/xml")
+    public VirtualMachine getInfo(@PathParam("id") int id) {
+        return new VirtualMachine("testVirtualMachine");
+    }
+
+    @GET
+    @Path("/sampleservice")
+    @Produces("application/xml")
+    public Service sampleService(@PathParam("id") int id) {
+        return new Service("sshd", true);
+    }
 
 }

@@ -4,30 +4,31 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class Service {
-	private String name;
-	private boolean start;
+    private String name;
+    private boolean start;
 
-	public boolean isStart() {
-		return start;
-	}
+    public boolean isStart() {
+        return start;
+    }
 
-	public void setStart(boolean start) {
-		this.start = start;
-	}
+    public void setStart(boolean start) {
+        this.start = start;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public Service(String name) {
-		this.name = name;
-	}
+    public Service(String name, boolean start) {
+        this.name = name;
+        this.start = start;
+    }
 
-	public Service() {
-	}
+    public Service() {
+    }
 
 }
