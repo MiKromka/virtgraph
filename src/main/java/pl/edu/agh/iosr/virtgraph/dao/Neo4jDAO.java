@@ -1,4 +1,4 @@
-package pl.edu.agh.iosr.virtgraph.runner;
+package pl.edu.agh.iosr.virtgraph.dao;
 
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
@@ -13,12 +13,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
+import pl.edu.agh.iosr.virtgraph.model.Host;
+import pl.edu.agh.iosr.virtgraph.model.HostList;
+
 @Repository
-public class DbRunner {
+public class Neo4jDAO implements DataAccessObject {
 
 	private static final String DB_PATH = "D:\\dev\\lib\\neo4j-community-1.8.2";
 	private static final Logger LOGGER = LoggerFactory
-			.getLogger(DbRunner.class);
+			.getLogger(Neo4jDAO.class);
 	private static final String SERVICE_PROPERTY_NAME = "serviceName";
 	private static final String VM_PROPERTY_NAME = "vmName";
 	private static final String NODE_PROPERTY_NAME = "nodeName";
@@ -130,5 +133,17 @@ public class DbRunner {
 
 	public void shutDown() {
 		grapDatabaseService.shutdown();
+	}
+
+	@Override
+	public int registerHost(Host host) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public HostList getHostList() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
