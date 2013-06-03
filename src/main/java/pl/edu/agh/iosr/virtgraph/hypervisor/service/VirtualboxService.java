@@ -34,7 +34,7 @@ public class VirtualboxService implements VirtualMachineService {
 	private IVirtualBox vBox;
 
 	@Autowired
-	ServerCommunicator srvCommunicator;
+	ServerCommunicator serverCommunicator;
 
 	@PostConstruct
 	public void init() {

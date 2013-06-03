@@ -67,7 +67,7 @@ public class VMController {
 	@Path("/xxx/{id}")
 	@Produces("application/xml")
 	public VirtualMachine getInfo(@PathParam("id") int id) {
-		return new VirtualMachine("testVirtualMachine");
+		return new VirtualMachine("testVirtualMachine", 0);
 	}
 
 	@GET

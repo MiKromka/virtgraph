@@ -15,6 +15,7 @@ import pl.edu.agh.iosr.virtgraph.hypervisor.exception.CouldNotRegisterException;
 import pl.edu.agh.iosr.virtgraph.hypervisor.vmmanager.StateProvider;
 import pl.edu.agh.iosr.virtgraph.model.Host;
 import pl.edu.agh.iosr.virtgraph.model.Service;
+import pl.edu.agh.iosr.virtgraph.model.VirtualMachine;
 import pl.edu.agh.iosr.virtgraph.properties.Properties;
 
 import com.sun.jersey.api.client.Client;
@@ -55,6 +56,14 @@ public class RESTServerCommunicator implements ServerCommunicator {
 						+ response.getStatus());
 			}
 
+			if (Properties.isEnableVmRegistration()) {
+				for (VirtualMachine vm : stateProvider.getAvailableVMs()) {
+					registerVm(vm);
+				}
+			} else {
+				LOGGER.debug("ENABLE_VM_REGISTRATION property is not set.");
+			}
+
 			if (Properties.isEnableServiceRegistration()) {
 				for (Service s : stateProvider.getAvailableServices()) {
 					registerService(s);
@@ -80,6 +89,11 @@ public class RESTServerCommunicator implements ServerCommunicator {
 		 * path("rest").path("hello").accept(MediaType
 		 * .TEXT_HTML).get(String.class));
 		 */
+	}
+
+	@Override
+	public void registerVm(VirtualMachine vm) throws CouldNotRegisterException {
+		// TODO
 	}
 
 	@Override
