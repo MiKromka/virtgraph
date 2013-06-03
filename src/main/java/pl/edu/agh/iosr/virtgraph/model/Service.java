@@ -1,34 +1,68 @@
 package pl.edu.agh.iosr.virtgraph.model;
 
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class Service {
-    private String name;
-    private boolean start;
+	private String name;
+	private String runCommand;
+	private String stopCommand;
+	private boolean start;
+	private List<String> args;
 
-    public boolean isStart() {
-        return start;
-    }
+	public Service(String name, String runCommand, String stopCommand,
+			boolean start, List<String> args) {
+		super();
+		this.name = name;
+		this.runCommand = runCommand;
+		this.stopCommand = stopCommand;
+		this.start = start;
+		this.args = args;
+	}
 
-    public void setStart(boolean start) {
-        this.start = start;
-    }
+	public List<String> getArgs() {
+		return args;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setArgs(List<String> args) {
+		this.args = args;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public Service() {
+	}
 
-    public Service(String name, boolean start) {
-        this.name = name;
-        this.start = start;
-    }
+	public boolean isStart() {
+		return start;
+	}
 
-    public Service() {
-    }
+	public void setStart(boolean start) {
+		this.start = start;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getRunCommand() {
+		return runCommand;
+	}
+
+	public void setRunCommand(String runCommand) {
+		this.runCommand = runCommand;
+	}
+
+	public String getStopCommand() {
+		return stopCommand;
+	}
+
+	public void setStopCommand(String stopCommand) {
+		this.stopCommand = stopCommand;
+	}
 
 }

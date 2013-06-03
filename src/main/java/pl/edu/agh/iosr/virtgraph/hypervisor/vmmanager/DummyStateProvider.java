@@ -14,7 +14,9 @@ public class DummyStateProvider implements StateProvider {
 	public List<Service> getAvailableServices() {
 		// FIXME
 		ArrayList<Service> serviceList = new ArrayList<Service>();
-		serviceList.add(new Service("sshd"));
+		Service sshdService = new Service("sshd-ubuntu",
+				"sudo service ssh start", "sudo service ssh stop", true);
+		serviceList.add(sshdService);
 		return serviceList;
 	}
 }

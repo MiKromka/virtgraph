@@ -4,10 +4,10 @@ public class Properties {
 	private final static String SERVER_ADDRESS = "http://192.168.0.12:8080/virtgraph/dummy/";
 	private final static String RELATIVE_SERVER_LOCATION = "/virtgraph/dummy/host";
 	private final static boolean REGISTER_ON_STARTUP = false;
-	private final static boolean CONNECT_TO_VIRTUALBOX_ON_STARTUP = false;
-	private final static boolean ENABLE_SERVICE_REGISTRATION = false;
-	private final static String VIRTUAL_MACHINE_USER = "test";
-	private final static String VIRTUAL_MACHINE_PASSWORD = "test";
+	private final static boolean CONNECT_TO_VIRTUALBOX_ON_STARTUP = true;
+	private final static boolean ENABLE_SERVICE_REGISTRATION = true;
+	private final static String VIRTUAL_MACHINE_USER = "tomek";
+	private final static String VIRTUAL_MACHINE_PASSWORD = "wereti";
 	private final static String VIRTUALBOX_HYPERVISOR_ADDRESS = "http://localhost:18083";
 
 	public static boolean isEnableServiceRegistration() {
