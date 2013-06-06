@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import pl.edu.agh.iosr.virtgraph.hypervisor.communicator.ServerCommunicator;
 import pl.edu.agh.iosr.virtgraph.hypervisor.service.VirtualMachineService;
 import pl.edu.agh.iosr.virtgraph.model.Service;
 import pl.edu.agh.iosr.virtgraph.model.VirtualMachine;
@@ -24,60 +25,69 @@ import pl.edu.agh.iosr.virtgraph.model.VirtualMachine;
 @Path("/vms")
 public class VMController {
 
-	@Autowired
-	VirtualMachineService vmService;
+    @Autowired
+    VirtualMachineService vmService;
 
-	@POST
-	@Path("/")
-	@Consumes("application/xml")
-	@Produces("text/plain")
-	public String startVm(VirtualMachine vm) {
-		vmService.start(vm);
-		return "not implemented yet";
-	}
+    // remove once done testing. used in sampleservice()
+    @Autowired
+    ServerCommunicator comm;
 
-	@POST
-	@Path("/{vmid}/services")
-	@Consumes("application/xml")
-	public Response toggleService(@PathParam("vmid") int vmId, Service service) {
-		if (service.isStart()) {
-			vmService.startService(service);
-		} else {
-			vmService.stopService(service);
-		}
+    @POST
+    @Path("/")
+    @Consumes("application/xml")
+    @Produces("text/plain")
+    public String startVm(VirtualMachine vm) {
+        vmService.start(vm);
+        return "not implemented yet";
+    }
 
-		return Response.ok().build();
-	}
+    @POST
+    @Path("/{vmid}/services")
+    @Consumes("application/xml")
+    public Response toggleService(@PathParam("vmid") int vmId, Service service) {
+        if (service.isStart()) {
+            vmService.startService(service);
+        } else {
+            vmService.stopService(service);
+        }
 
-	@PUT
-	@Path("/{vmid}/services")
-	@Consumes("application/xml")
-	public String newService(@PathParam("vmid") int vmId, Service service) {
-		return "not implemented yet";
-	}
+        return Response.ok().build();
+    }
 
-	@DELETE
-	@Path("/{vmid}/services")
-	@Consumes("application/xml")
-	public String deleteService(@PathParam("vmid") int vmId, Service service) {
-		return "not implemented yet";
-	}
+    @PUT
+    @Path("/{vmid}/services")
+    @Consumes("application/xml")
+    public String newService(@PathParam("vmid") int vmId, Service service) {
+        return "not implemented yet";
+    }
 
-	@GET
-	@Path("/xxx/{id}")
-	@Produces("application/xml")
-	public VirtualMachine getInfo(@PathParam("id") int id) {
-		return new VirtualMachine("testVirtualMachine", 0);
-	}
+    @DELETE
+    @Path("/{vmid}/services")
+    @Consumes("application/xml")
+    public String deleteService(@PathParam("vmid") int vmId, Service service) {
+        return "not implemented yet";
+    }
 
-	@GET
-	@Path("/sampleservice")
-	@Produces("application/xml")
-	public Service sampleService(@PathParam("id") int id) {
-		List<String> args = new LinkedList<String>();
-		args.add("/home/tomek/test");
-		return new Service("create-test-file", "/usr/bin/touch", "/usr/bin/rm",
-				true, args);
-	}
+    @GET
+    @Path("/xxx/{id}")
+    @Produces("application/xml")
+    public VirtualMachine getInfo(@PathParam("id") int id) {
+        return new VirtualMachine("testVirtualMachine", 0);
+    }
+
+    @GET
+    @Path("/sampleservice")
+    @Produces("application/xml")
+    public Service sampleService(@PathParam("id") int id) {
+        List<String> args = new LinkedList<String>();
+        args.add("/home/tomek/test");
+        try {
+            comm.registerHost();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new Service("create-test-file", "/usr/bin/touch", "/usr/bin/rm",
+                true, args);
+    }
 
 }

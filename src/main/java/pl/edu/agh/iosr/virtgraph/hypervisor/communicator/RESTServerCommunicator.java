@@ -27,92 +27,93 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 @Component
 public class RESTServerCommunicator implements ServerCommunicator {
 
-	private final static Logger LOGGER = LoggerFactory
-			.getLogger(RESTServerCommunicator.class);
+    private final static Logger LOGGER = LoggerFactory
+            .getLogger(RESTServerCommunicator.class);
 
-	@Autowired
-	private StateProvider stateProvider;
+    @Autowired
+    private StateProvider stateProvider;
 
-	@Override
-	@PostConstruct
-	public void registerHost() throws CouldNotRegisterException {
-		if (Properties.isRegisterOnStartup()) {
-			/* TODO: add sensible properties to the Host instance */
-			Host host = new Host("hostName");
+    @PostConstruct
+    public void registerOnStartup() {
+        try {
+            if (Properties.isRegisterOnStartup())
+                registerHost();
+            else
+                LOGGER.debug("REGISTER_ON_STARTUP property is not set.");
+        } catch (CouldNotRegisterException e) {
+            e.printStackTrace();
+        }
+    }
 
-			URI baseURI = UriBuilder.fromUri(Properties.getServerAddress())
-					.build();
-			ClientConfig config = new DefaultClientConfig();
-			Client client = Client.create(config);
-			WebResource service = client.resource(baseURI);
-			ClientResponse response = service.path("host")
-					.type(MediaType.APPLICATION_XML).entity(host)
-					.post(ClientResponse.class);
-			if (response.getStatus() >= 300) {
-				LOGGER.debug("Failed to register on the server");
-				throw new CouldNotRegisterException();
-			} else {
-				LOGGER.debug("Successfully registered on the server. Response status code:"
-						+ response.getStatus());
-			}
+    @Override
+    public void registerHost() throws CouldNotRegisterException {
+        /* TODO: add sensible properties to the Host instance */
+        Host host = new Host("hostName");
 
-			if (Properties.isEnableVmRegistration()) {
-				for (VirtualMachine vm : stateProvider.getAvailableVMs()) {
-					registerVm(vm);
-				}
-			} else {
-				LOGGER.debug("ENABLE_VM_REGISTRATION property is not set.");
-			}
+        URI baseURI = UriBuilder.fromUri(Properties.getServerAddress()).build();
+        ClientConfig config = new DefaultClientConfig();
+        Client client = Client.create(config);
+        WebResource service = client.resource(baseURI);
+        ClientResponse response = service.path("hosts").type(
+                MediaType.APPLICATION_XML).entity(host).post(
+                ClientResponse.class);
+        if (response.getStatus() >= 300) {
+            LOGGER.debug("Failed to register on the server");
+            throw new CouldNotRegisterException();
+        } else {
+            LOGGER.debug("Successfully registered on the server. Response status code:"
+                    + response.getStatus());
+        }
 
-			if (Properties.isEnableServiceRegistration()) {
-				for (Service s : stateProvider.getAvailableServices()) {
-					registerService(s);
-				}
-			} else {
-				LOGGER.debug("ENABLE_SERVICE_REGISTRATION property is not set.");
-			}
-		} else {
-			LOGGER.debug("REGISTER_ON_STARTUP property is not set.");
-		}
+        if (Properties.isEnableVmRegistration()) {
+            for (VirtualMachine vm : stateProvider.getAvailableVMs()) {
+                registerVm(vm);
+            }
+        } else {
+            LOGGER.debug("ENABLE_VM_REGISTRATION property is not set.");
+        }
 
-		// FIXME prvide a way to register multipne services with one message
-		// (or at least one registerService() call)
+        if (Properties.isEnableServiceRegistration()) {
+            for (Service s : stateProvider.getAvailableServices()) {
+                registerService(s);
+            }
+        } else {
+            LOGGER.debug("ENABLE_SERVICE_REGISTRATION property is not set.");
+        }
 
-		/*
-		 * // Get plain text // Get plain text
-		 * System.out.println(service.path("rest"
-		 * ).path("hello").accept(MediaType.TEXT_PLAIN).get(String.class)); //
-		 * Get XML
-		 * System.out.println(service.path("rest").path("hello").accept(MediaType
-		 * .TEXT_XML).get(String.class)); // The HTML
-		 * System.out.println(service.
-		 * path("rest").path("hello").accept(MediaType
-		 * .TEXT_HTML).get(String.class));
-		 */
-	}
+        // FIXME prvide a way to register multipne services with one message
+        // (or at least one registerService() call)
 
-	@Override
-	public void registerVm(VirtualMachine vm) throws CouldNotRegisterException {
-		// TODO
-	}
+        /*
+         * // Get plain text // Get plain text System.out.println(service.path("rest"
+         * ).path("hello").accept(MediaType.TEXT_PLAIN).get(String.class)); // Get XML
+         * System.out.println(service.path("rest").path("hello").accept(MediaType .TEXT_XML).get(String.class)); // The
+         * HTML System.out.println(service. path("rest").path("hello").accept(MediaType .TEXT_HTML).get(String.class));
+         */
+    }
 
-	@Override
-	public void registerService(Service service)
-			throws CouldNotRegisterException {
-		// TODO: add proper error messages in case of failure
-		URI baseURI = UriBuilder.fromUri(Properties.getServerAddress()).build();
-		ClientConfig config = new DefaultClientConfig();
-		Client client = Client.create(config);
-		WebResource webRes = client.resource(baseURI);
-		ClientResponse response = webRes.path("service")
-				.type(MediaType.APPLICATION_XML).entity(service)
-				.post(ClientResponse.class);
-		if (response.getStatus() >= 300) {
-			LOGGER.debug("Failed to register the service on the server");
-			throw new CouldNotRegisterException();
-		} else {
-			LOGGER.debug("Successfully registered the service on the server. Response status code:"
-					+ response.getStatus());
-		}
-	}
+    @Override
+    public void registerVm(VirtualMachine vm) throws CouldNotRegisterException {
+        // TODO
+    }
+
+    @Override
+    public void registerService(Service service)
+            throws CouldNotRegisterException {
+        // TODO: add proper error messages in case of failure
+        URI baseURI = UriBuilder.fromUri(Properties.getServerAddress()).build();
+        ClientConfig config = new DefaultClientConfig();
+        Client client = Client.create(config);
+        WebResource webRes = client.resource(baseURI);
+        ClientResponse response = webRes.path("service").type(
+                MediaType.APPLICATION_XML).entity(service).post(
+                ClientResponse.class);
+        if (response.getStatus() >= 300) {
+            LOGGER.debug("Failed to register the service on the server");
+            throw new CouldNotRegisterException();
+        } else {
+            LOGGER.debug("Successfully registered the service on the server. Response status code:"
+                    + response.getStatus());
+        }
+    }
 }

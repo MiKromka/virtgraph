@@ -27,7 +27,7 @@
             <param-name>contextConfigLocation</param-name>
             <param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
         </init-param>
-        <load-on-startup>3</load-on-startup>
+        <load-on-startup>2</load-on-startup>
     </servlet>
 
     <!-- hypervisor servlet -->
@@ -42,7 +42,7 @@
             <param-name>contextConfigLocation</param-name>
             <param-value>/WEB-INF/spring/hypervisorServlet/servlet-context.xml</param-value>
         </init-param>
-        <load-on-startup>2</load-on-startup>
+        <load-on-startup>3</load-on-startup>
     </servlet>
 
     <!-- server servlet -->
