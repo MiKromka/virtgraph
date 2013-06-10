@@ -2,7 +2,6 @@ package pl.edu.agh.iosr.virtgraph.hypervisor.communicator;
 
 import java.net.URI;
 
-import javax.annotation.PostConstruct;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
@@ -11,8 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import pl.edu.agh.iosr.virtgraph.hypervisor.exception.CouldNotRegisterException;
-import pl.edu.agh.iosr.virtgraph.hypervisor.vmmanager.StateProvider;
+import pl.edu.agh.iosr.virtgraph.hypervisor.exception.NotRegisteredException;
+import pl.edu.agh.iosr.virtgraph.hypervisor.state.StateProvider;
 import pl.edu.agh.iosr.virtgraph.model.Host;
 import pl.edu.agh.iosr.virtgraph.model.Service;
 import pl.edu.agh.iosr.virtgraph.model.VirtualMachine;
@@ -33,22 +32,10 @@ public class RESTServerCommunicator implements ServerCommunicator {
     @Autowired
     private StateProvider stateProvider;
 
-    @PostConstruct
-    public void registerOnStartup() {
-        try {
-            if (Properties.isRegisterOnStartup())
-                registerHost();
-            else
-                LOGGER.debug("REGISTER_ON_STARTUP property is not set.");
-        } catch (CouldNotRegisterException e) {
-            e.printStackTrace();
-        }
-    }
-
     @Override
-    public void registerHost() throws CouldNotRegisterException {
+    public String registerHost() throws NotRegisteredException {
         /* TODO: add sensible properties to the Host instance */
-        Host host = new Host("hostName");
+        Host host = new Host(Properties.getHostName());
 
         URI baseURI = UriBuilder.fromUri(Properties.getServerAddress()).build();
         ClientConfig config = new DefaultClientConfig();
@@ -59,28 +46,19 @@ public class RESTServerCommunicator implements ServerCommunicator {
                 ClientResponse.class);
         if (response.getStatus() >= 300) {
             LOGGER.debug("Failed to register on the server");
-            throw new CouldNotRegisterException();
+            throw new NotRegisteredException();
         } else {
             LOGGER.debug("Successfully registered on the server. Response status code:"
                     + response.getStatus());
         }
-
-        if (Properties.isEnableVmRegistration()) {
-            for (VirtualMachine vm : stateProvider.getAvailableVMs()) {
-                registerVm(vm);
-            }
-        } else {
-            LOGGER.debug("ENABLE_VM_REGISTRATION property is not set.");
-        }
-
-        if (Properties.isEnableServiceRegistration()) {
-            for (Service s : stateProvider.getAvailableServices()) {
-                registerService(s);
-            }
-        } else {
-            LOGGER.debug("ENABLE_SERVICE_REGISTRATION property is not set.");
-        }
-
+        return response.getLocation().toString();
+        /*
+         * if (Properties.isEnableVmRegistration()) { for (VirtualMachine vm : stateProvider.getVMs()) { registerVm(vm);
+         * } } else { LOGGER.debug("ENABLE_VM_REGISTRATION property is not set."); }
+         * 
+         * if (Properties.isEnableServiceRegistration()) { for (Service s : stateProvider.getServices()) {
+         * registerService(s); } } else { LOGGER.debug("ENABLE_SERVICE_REGISTRATION property is not set."); }
+         */
         // FIXME prvide a way to register multipne services with one message
         // (or at least one registerService() call)
 
@@ -93,13 +71,12 @@ public class RESTServerCommunicator implements ServerCommunicator {
     }
 
     @Override
-    public void registerVm(VirtualMachine vm) throws CouldNotRegisterException {
+    public void registerVm(VirtualMachine vm) throws NotRegisteredException {
         // TODO
     }
 
     @Override
-    public void registerService(Service service)
-            throws CouldNotRegisterException {
+    public void registerService(Service service) throws NotRegisteredException {
         // TODO: add proper error messages in case of failure
         URI baseURI = UriBuilder.fromUri(Properties.getServerAddress()).build();
         ClientConfig config = new DefaultClientConfig();
@@ -110,10 +87,11 @@ public class RESTServerCommunicator implements ServerCommunicator {
                 ClientResponse.class);
         if (response.getStatus() >= 300) {
             LOGGER.debug("Failed to register the service on the server");
-            throw new CouldNotRegisterException();
+            throw new NotRegisteredException();
         } else {
             LOGGER.debug("Successfully registered the service on the server. Response status code:"
                     + response.getStatus());
         }
     }
+
 }

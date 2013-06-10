@@ -1,14 +1,13 @@
 package pl.edu.agh.iosr.virtgraph.hypervisor.communicator;
 
-import pl.edu.agh.iosr.virtgraph.hypervisor.exception.CouldNotRegisterException;
+import pl.edu.agh.iosr.virtgraph.hypervisor.exception.NotRegisteredException;
 import pl.edu.agh.iosr.virtgraph.model.Service;
 import pl.edu.agh.iosr.virtgraph.model.VirtualMachine;
 
 public interface ServerCommunicator {
-	public void registerService(Service service)
-			throws CouldNotRegisterException;
+    public void registerService(Service service) throws NotRegisteredException;
 
-	public void registerVm(VirtualMachine vm) throws CouldNotRegisterException;
+    public void registerVm(VirtualMachine vm) throws NotRegisteredException;
 
-	void registerHost() throws CouldNotRegisterException;
+    public String registerHost() throws NotRegisteredException;
 }

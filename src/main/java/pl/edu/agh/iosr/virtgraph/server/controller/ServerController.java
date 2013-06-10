@@ -22,38 +22,38 @@ import pl.edu.agh.iosr.virtgraph.server.service.ServerService;
 @Controller
 @Path("/server")
 public class ServerController {
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(ServerController.class);
-	@Autowired
-	ServerService serverService;
+    private static final Logger LOGGER = LoggerFactory
+            .getLogger(ServerController.class);
+    @Autowired
+    ServerService serverService;
 
-	@GET
-	@Produces("application/xml")
-	@Path("/tryme/{ile}")
-	public ParagonZaLas zaplacZaLas(@PathParam("ile") int ile) {
-		LOGGER.info("Place za las {}", ile);
-		return serverService.zaplacZaLas(ile);
-	}
+    @GET
+    @Produces("application/xml")
+    @Path("/tryme/{ile}")
+    public ParagonZaLas zaplacZaLas(@PathParam("ile") int ile) {
+        LOGGER.info("Place za las {}", ile);
+        return serverService.zaplacZaLas(ile);
+    }
 
-	@POST
-	@Path("/hosts")
-	@Consumes("application/xml")
-	public Response registerHost(Host host) {
-		LOGGER.info("registering host with name: {}", host.getName());
-		return generateUriFromServiceResponse(serverService.registerHost(host));
-	}
+    @POST
+    @Path("/hosts")
+    @Consumes("application/xml")
+    public Response registerHost(Host host) {
+        LOGGER.info("registering host with name: {}", host.getName());
+        return generateUriFromServiceResponse(serverService.registerHost(host));
+    }
 
-	@GET
-	@Produces("application/xml")
-	@Path("/hosts/")
-	public HostList getHosts() {
-		LOGGER.info("returning hostList");
-		return serverService.getHostList();
-	}
+    @GET
+    @Produces("application/xml")
+    @Path("/hosts/")
+    public HostList getHosts() {
+        LOGGER.info("returning hostList");
+        return serverService.getHostList();
+    }
 
-	private Response generateUriFromServiceResponse(String serviceResponse) {
-		return Response.created(UriBuilder.fromUri(serviceResponse).build())
-				.build();
-	}
+    private Response generateUriFromServiceResponse(String serviceResponse) {
+        return Response.created(UriBuilder.fromUri(serviceResponse).build())
+                .build();
+    }
 
 }

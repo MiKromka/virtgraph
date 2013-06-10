@@ -20,7 +20,7 @@
  -->	
 	<context:component-scan base-package="pl.edu.agh.iosr.virtgraph.hypervisor.controller, 
 		pl.edu.agh.iosr.virtgraph.hypervisor.service, pl.edu.agh.iosr.virtgraph.hypervisor.communicator,
-        pl.edu.agh.iosr.virtgraph.hypervisor.vmmanager"/>
+        pl.edu.agh.iosr.virtgraph.hypervisor.vmmanager, pl.edu.agh.iosr.virtgraph.hypervisor.state"/>
 		
 
 </beans>

@@ -7,17 +7,21 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class VMList {
-	private List<VirtualMachine> vms = new ArrayList<VirtualMachine>();
+    private List<VirtualMachine> vms = new ArrayList<VirtualMachine>();
 
-	public List<VirtualMachine> getVms() {
-		return vms;
-	}
+    public List<VirtualMachine> getVms() {
+        return vms;
+    }
 
-	public void setVms(List<VirtualMachine> vms) {
-		this.vms = vms;
-	}
+    public void setVms(List<VirtualMachine> vms) {
+        this.vms = vms;
+    }
 
-	public VMList() {
-		//
-	}
+    public VMList(List<VirtualMachine> vms) {
+        this.vms = vms;
+    }
+
+    public VMList() {
+        //
+    }
 }
