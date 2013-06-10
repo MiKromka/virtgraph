@@ -1,23 +1,22 @@
 package pl.edu.agh.iosr.virtgraph.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class VMList {
-    private List<VirtualMachine> vms = new ArrayList<VirtualMachine>();
+    private Collection<VirtualMachine> vms;
 
-    public List<VirtualMachine> getVms() {
+    public Collection<VirtualMachine> getVms() {
         return vms;
     }
 
-    public void setVms(List<VirtualMachine> vms) {
+    public void setVms(Collection<VirtualMachine> vms) {
         this.vms = vms;
     }
 
-    public VMList(List<VirtualMachine> vms) {
+    public VMList(Collection<VirtualMachine> vms) {
         this.vms = vms;
     }
 

@@ -1,5 +1,6 @@
 package pl.edu.agh.iosr.virtgraph.hypervisor.state;
 
+import java.util.Collection;
 import java.util.List;
 
 import pl.edu.agh.iosr.virtgraph.hypervisor.exception.NotRegisteredException;
@@ -12,7 +13,9 @@ public interface StateProvider {
 
     public List<Service> getServices();
 
-    public List<VirtualMachine> getVMs();
+    public Collection<VirtualMachine> getVMs();
+
+    public VirtualMachine getVM(String id);
 
     public void updateService(Service service);
 

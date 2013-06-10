@@ -39,10 +39,12 @@ public class VMController {
     @POST
     @Path("/{vmid}/services")
     @Consumes("application/xml")
-    public Response toggleService(@PathParam("vmid") int vmId, Service service) {
+    public Response toggleService(@PathParam("vmid") String vmId,
+            Service service) {
         if (service.isStart()) {
-            vmService.startService(service);
+            vmService.startService(vmId, service);
         } else {
+            // FIXME - not enough args
             vmService.stopService(service);
         }
 

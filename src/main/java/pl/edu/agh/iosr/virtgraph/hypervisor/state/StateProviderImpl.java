@@ -1,6 +1,8 @@
 package pl.edu.agh.iosr.virtgraph.hypervisor.state;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
@@ -30,7 +32,7 @@ public class StateProviderImpl implements StateProvider {
     private final static Logger LOGGER = LoggerFactory
             .getLogger(StateProviderImpl.class);
 
-    private List<VirtualMachine> VMs;
+    private Map<String, VirtualMachine> VMs;
 
     // FIXME - move initialization to one place (either here or ServerCommunicator)
     @PostConstruct
@@ -67,8 +69,13 @@ public class StateProviderImpl implements StateProvider {
     }
 
     @Override
-    public List<VirtualMachine> getVMs() {
-        return VMs;
+    public Collection<VirtualMachine> getVMs() {
+        return VMs.values();
+    }
+
+    @Override
+    public VirtualMachine getVM(String id) {
+        return VMs.get(id);
     }
 
     @Override
