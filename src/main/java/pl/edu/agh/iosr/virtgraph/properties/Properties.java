@@ -11,6 +11,8 @@ public class Properties {
     private final static String VIRTUAL_MACHINE_USER = "tomek";
     private final static String VIRTUAL_MACHINE_PASSWORD = "wereti";
     private final static String INNER_VIRTUAL_MACHINE_USER = "root";
+    private final static String INNER_VIRTUAL_MACHINE_PASSWORD = "wereti";
+    private final static String VIRTUALBOX_HYPERVISOR_ADDRESS = "http://localhost:18083";
 
     public static String getInnerVirtualMachineUser() {
         return INNER_VIRTUAL_MACHINE_USER;
@@ -19,9 +21,6 @@ public class Properties {
     public static String getInnerVirtualMachinePassword() {
         return INNER_VIRTUAL_MACHINE_PASSWORD;
     }
-
-    private final static String INNER_VIRTUAL_MACHINE_PASSWORD = "wereti";
-    private final static String VIRTUALBOX_HYPERVISOR_ADDRESS = "http://localhost:18083";
 
     public static boolean isEnableVmRegistration() {
         return ENABLE_VM_REGISTRATION;

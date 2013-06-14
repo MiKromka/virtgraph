@@ -9,14 +9,14 @@ import org.springframework.stereotype.Component;
 import pl.edu.agh.iosr.virtgraph.hypervisor.exception.NoSuchVMException;
 import pl.edu.agh.iosr.virtgraph.hypervisor.state.StateProvider;
 import pl.edu.agh.iosr.virtgraph.hypervisor.vmmanager.VirtualboxManagerWrapper;
-import pl.edu.agh.iosr.virtgraph.model.Service;
+import pl.edu.agh.iosr.virtgraph.model.VirtualMachine;
 
 /*Need to use spring to make autowiring work.*/
 @Component
 @Scope("prototype")
-public class ServiceRunnerThread implements Runnable {
+public class VMToggerThread implements Runnable {
     private final static Logger LOGGER = LoggerFactory
-            .getLogger(ServiceRunnerThread.class);
+            .getLogger(VMToggerThread.class);
 
     @Autowired
     VirtualboxManagerWrapper vBoxWrapper;
@@ -24,32 +24,22 @@ public class ServiceRunnerThread implements Runnable {
     @Autowired
     StateProvider stateProvider;
 
-    public String getVmId() {
-        return vmId;
+    private VirtualMachine vm;
+
+    public VirtualMachine getVm() {
+        return vm;
     }
 
-    public void setVmId(String vmId) {
-        this.vmId = vmId;
+    public void setVm(VirtualMachine vm) {
+        this.vm = vm;
     }
 
-    public Service getService() {
-        return service;
+    public VMToggerThread(VirtualMachine vm) {
+        this.vm = vm;
     }
 
-    public void setService(Service service) {
-        this.service = service;
-    }
-
-    private String vmId;
-    private Service service;
-
-    public ServiceRunnerThread() {
+    public VMToggerThread() {
         //
-    }
-
-    public ServiceRunnerThread(String vmId, Service service) {
-        this.vmId = vmId;
-        this.service = service;
     }
 
     @Override
@@ -59,11 +49,11 @@ public class ServiceRunnerThread implements Runnable {
         System.out.println("Service runner thread runs...");
         boolean success = false;
         try {
-            success = vBoxWrapper.toggleService(vmId, service);
+            success = vBoxWrapper.toggleMachine(vm);
         } catch (NoSuchVMException e) {
             e.printStackTrace();
         }
         if (success)
-            stateProvider.updateService(service);
+            stateProvider.updateVM(vm);
     }
 }

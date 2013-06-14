@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import pl.edu.agh.iosr.virtgraph.hypervisor.state.StateProvider;
 import pl.edu.agh.iosr.virtgraph.model.Service;
 import pl.edu.agh.iosr.virtgraph.model.VMList;
+import pl.edu.agh.iosr.virtgraph.model.VirtualMachine;
 
 @Controller
 @Path("/test")
@@ -30,6 +31,14 @@ public class TestController {
         args.add("/home/tomek/test");
         return new Service("create-test-file", "/usr/bin/touch", "/usr/bin/rm",
                 true, args);
+    }
+
+    @GET
+    @Path("/vm")
+    @Produces("application/xml")
+    public VirtualMachine sampleVm() {
+        return new VirtualMachine("samplename", "sampleid", true);
+
     }
 
     @GET

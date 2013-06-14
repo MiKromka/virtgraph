@@ -4,9 +4,7 @@ import pl.edu.agh.iosr.virtgraph.model.Service;
 import pl.edu.agh.iosr.virtgraph.model.VirtualMachine;
 
 public interface VirtualMachineService {
-    public void start(VirtualMachine vm);
+    public void toggle(VirtualMachine vm);
 
-    public void startService(String vmId, Service service);
-
-    public void stopService(Service service);
+    public void toggleService(String vmId, Service service);
 }

@@ -19,7 +19,7 @@ public interface StateProvider {
 
     public void updateService(Service service);
 
-    // public void updateVM(VirtualMachine vm);
+    public void updateVM(VirtualMachine vm);
 
     public void updateState();
 }

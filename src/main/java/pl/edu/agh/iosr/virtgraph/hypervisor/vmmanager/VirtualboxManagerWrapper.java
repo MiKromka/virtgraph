@@ -15,10 +15,13 @@ import org.virtualbox_4_2.IGuest;
 import org.virtualbox_4_2.IGuestProcess;
 import org.virtualbox_4_2.IGuestSession;
 import org.virtualbox_4_2.IMachine;
+import org.virtualbox_4_2.IProgress;
 import org.virtualbox_4_2.ISession;
 import org.virtualbox_4_2.IVirtualBox;
 import org.virtualbox_4_2.LockType;
+import org.virtualbox_4_2.MachineState;
 import org.virtualbox_4_2.ProcessCreateFlag;
+import org.virtualbox_4_2.ProcessStatus;
 import org.virtualbox_4_2.VirtualBoxManager;
 
 import pl.edu.agh.iosr.virtgraph.hypervisor.exception.NoSuchVMException;
@@ -58,8 +61,11 @@ public class VirtualboxManagerWrapper {
         Map<String, VirtualMachine> VMs = new HashMap<String, VirtualMachine>();
         if (vBox != null) {
             for (IMachine vm : vBox.getMachines()) {
-                VMs.put(vm.getId(),
-                        new VirtualMachine(vm.getName(), vm.getId()));
+                boolean running = false;
+                if (vm.getState().equals(MachineState.Running))
+                    running = true;
+                VMs.put(vm.getId(), new VirtualMachine(vm.getName(),
+                        vm.getId(), running));
             }
         } else
             LOGGER.debug(" no connection to virtualbox hypervisor. "
@@ -68,9 +74,62 @@ public class VirtualboxManagerWrapper {
         return VMs;
     }
 
-    public void startService(String vmId,
+    // FIXME: use either only the name or only the id. This might get confusing.
+    private boolean vmExists(String name) {
+        return getVM(name) != null;
+    }
+
+    private IMachine getVM(String name) {
+        if (vBox != null) {
+            for (IMachine vm : vBox.getMachines()) {
+                if (vm.getName().equals(name))
+                    return vm;
+            }
+        } else
+            LOGGER.debug(" no connection to virtualbox hypervisor. "
+                    + "connect_to_virtualbox_on_startup might not be set"
+                    + " not gathering data on virtual machines.");
+        return null;
+    }
+
+    /*
+     * vm - model VirtualMachine, vboxVM - virtualbox IMachine. This might be a little confusing, focus!
+     */
+    public boolean toggleMachine(VirtualMachine vm) throws NoSuchVMException {
+        String name = vm.getName();
+        System.out.println("\nAttempting to start VM '" + name + "'");
+        // TODO: attach the sources, find out what the arguments mean. Is the third argument a timeout?
+        // TODO: trigger state update if anything goes wrong
+        if (!vmExists(name))
+            throw new NoSuchVMException();
+        IMachine vboxVM = getVM(name);
+        ISession session = null;
+        if (vm.isRunning())
+            return vBoxManager.startVm(name, null, 7000);
+        else {
+            try {
+                session = vBoxManager.getSessionObject();
+                vboxVM.lockMachine(session, LockType.Shared);
+
+                IConsole console = session.getConsole();
+                IProgress progress = console.powerDown();
+                progress.waitForCompletion(10000);
+                if (progress.getResultCode() != 0)
+                    return false;
+                return true;
+
+            } finally {
+                if (session != null)
+                    session.unlockMachine();
+            }
+        }
+    }
+
+    public boolean toggleService(String vmId,
             pl.edu.agh.iosr.virtgraph.model.Service service)
             throws NoSuchVMException {
+
+        ProcessStatus exitStatus = null;
 
         // TODO finish me, check me, use the sent service
         IMachine machine = null;
@@ -85,39 +144,12 @@ public class VirtualboxManagerWrapper {
         IGuestSession gsession = null;
         try {
             session = vBoxManager.getSessionObject();
-            /*
-             * System.out.println("session state:"); System.out.println(session.getState());
-             * 
-             * System.out.println("locking the machine...");
-             */machine.lockMachine(session, LockType.Shared);
-
-            /*
-             * System.out.println("session state:"); System.out.println(session.getState());
-             */
+            machine.lockMachine(session, LockType.Shared);
             String user = Properties.getInnerVirtualMachineUser();
             String pass = Properties.getInnerVirtualMachinePassword();
-
-            // System.out.println("creatind guest session...");
             IConsole console = session.getConsole();
             IGuest guest = console.getGuest();
-            // arguments 3 and 4 are opional
-
             gsession = guest.createSession(user, pass, "", "");
-
-            /*
-             * System.out.println("guest session state:");
-             * 
-             * System.out.println(gsession.getDomain()); System.out.println(gsession.getName());
-             * System.out.println(gsession.getUser());
-             */
-            /*
-             * Boolean exists = gsession.fileExists("/homek/test/xxx"); System.out.println(exists);
-             */// IGuestFile file = gsession.fileOpen("/home/tomek/xxx", "r",
-               // "r",
-               // 0l,
-               // 0l);
-               // System.out.println(file.read(0l, 10l));
-
             List<String> args = new LinkedList<String>();
             List<String> env = new LinkedList<String>();
             List<ProcessCreateFlag> flags = new LinkedList<ProcessCreateFlag>();
@@ -127,42 +159,31 @@ public class VirtualboxManagerWrapper {
             for (String arg : service.getArgs()) {
                 args.add(arg);
             }
+            env.add("PATH=/bin:/usr/bin");
+            String command;
+            if (service.isStart())
+                command = service.getRunCommand();
+            else
+                command = service.getStopCommand();
 
-            // args.add("/usr/bin/service");
-            // args.add("ssh");
-            // args.add("start");
-            env.add("PATH=/bin:/usr/bin:/home/tomek/bin");
-
-            IGuestProcess process = gsession.processCreate(service
-                    .getRunCommand(), args, env, flags, 0l);
-
-            /*
-             * IGuestProcess process = gsession.processCreate( "/home/tomek/bin/sshd-start", args, env, flags, 0l);
-             */
-            /*
-             * System.out.println("guest process state:"); System.out.println(process.getStatus());
-             * System.out.println("waiting for the proces to complete:");
-             */
+            IGuestProcess process = gsession.processCreate(command, args, env,
+                    flags, 0l);
             // FIXME: move execution to another thread. wait as long as it takes. possibly use some kind of ThreadPool
 
             Thread.sleep(300);
             System.out.print("guest process state:");
             System.out.println(process.getStatus());
             System.out.println(process.getExitCode());
-            /*
-             * System.out.println(process.getStatus()); System.out.println(process.getExecutablePath());
-             * System.out.println(process.getEnvironment()); System.out.println(process.getExitCode());
-             */
+            exitStatus = process.getStatus();
         } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } finally {
-
             if (gsession != null) {
                 gsession.close();
             }
             session.unlockMachine();
         }
-
+        // TODO: other ways of determining if the service was run correctly might be more adequate
+        return exitStatus == org.virtualbox_4_2.ProcessStatus.TerminatedNormally;
     }
 }

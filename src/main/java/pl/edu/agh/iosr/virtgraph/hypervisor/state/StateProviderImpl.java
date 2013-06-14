@@ -81,6 +81,7 @@ public class StateProviderImpl implements StateProvider {
     @Override
     public void updateService(Service service) {
         // TODO Auto-generated method stub
+        System.out.println("StateProvider received a service update");
 
     }
 
@@ -88,5 +89,12 @@ public class StateProviderImpl implements StateProvider {
     public void updateState() {
         // TODO Auto-generated method stub
         LOGGER.debug("State update not implemented yet");
+    }
+
+    @Override
+    public void updateVM(VirtualMachine vm) {
+        System.out.println("StateProvider received a vm update");
+        // TODO Auto-generated method stub
+
     }
 }

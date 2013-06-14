@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import pl.edu.agh.iosr.virtgraph.hypervisor.communicator.ServerCommunicator;
 import pl.edu.agh.iosr.virtgraph.hypervisor.service.VirtualMachineService;
 import pl.edu.agh.iosr.virtgraph.model.Service;
+import pl.edu.agh.iosr.virtgraph.model.VirtualMachine;
 
 @Controller
 @Path("/vms")
@@ -36,18 +37,19 @@ public class VMController {
      * @Produces("text/plain") public String startVm(VirtualMachine vm) { vmService.start(vm); return
      * "not implemented yet"; }
      */
+
+    @POST
+    public Response toggleVm(VirtualMachine vm) {
+        vmService.toggle(vm);
+        return Response.ok().build();
+    }
+
     @POST
     @Path("/{vmid}/services")
     @Consumes("application/xml")
     public Response toggleService(@PathParam("vmid") String vmId,
             Service service) {
-        if (service.isStart()) {
-            vmService.startService(vmId, service);
-        } else {
-            // FIXME - not enough args
-            vmService.stopService(service);
-        }
-
+        vmService.toggleService(vmId, service);
         return Response.ok().build();
     }
 

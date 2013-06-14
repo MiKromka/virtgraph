@@ -8,6 +8,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
 
 import pl.edu.agh.iosr.virtgraph.hypervisor.threads.ServiceRunnerThread;
+import pl.edu.agh.iosr.virtgraph.hypervisor.threads.VMToggerThread;
 import pl.edu.agh.iosr.virtgraph.model.VirtualMachine;
 
 @Service
@@ -24,13 +25,16 @@ public class VirtualboxService implements VirtualMachineService,
      * @Autowired private VirtualboxManagerWrapper vBWrapper;
      */
     @Override
-    public void start(VirtualMachine vm) {
-        // TODO implement me
+    public void toggle(VirtualMachine vm) {
         LOGGER.debug("Starting a virtualmachine(not implemented yet) :" + vm);
+        VMToggerThread runner = applicationContext
+                .getBean(VMToggerThread.class);
+        runner.setVm(vm);
+        new Thread(runner).start();
     }
 
     @Override
-    public void startService(String vmId,
+    public void toggleService(String vmId,
             pl.edu.agh.iosr.virtgraph.model.Service service) {
 
         // /FIXME: there must be a better way to do this!
@@ -41,12 +45,6 @@ public class VirtualboxService implements VirtualMachineService,
         runner.setVmId(vmId);
 
         new Thread(runner).start();
-    }
-
-    @Override
-    public void stopService(pl.edu.agh.iosr.virtgraph.model.Service service) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
