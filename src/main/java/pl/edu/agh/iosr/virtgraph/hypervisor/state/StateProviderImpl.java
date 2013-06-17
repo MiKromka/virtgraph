@@ -82,19 +82,23 @@ public class StateProviderImpl implements StateProvider {
     public void updateService(Service service) {
         // TODO Auto-generated method stub
         System.out.println("StateProvider received a service update");
+        updateState();
 
     }
 
     @Override
     public void updateState() {
         // TODO Auto-generated method stub
-        LOGGER.debug("State update not implemented yet");
+        LOGGER.debug("Update received, refreshing the state");
+        VMs = vBoxManagerWrapper.getVMs();
+
     }
 
     @Override
     public void updateVM(VirtualMachine vm) {
-        System.out.println("StateProvider received a vm update");
         // TODO Auto-generated method stub
+        System.out.println("StateProvider received a vm update");
+        updateState();
 
     }
 }
