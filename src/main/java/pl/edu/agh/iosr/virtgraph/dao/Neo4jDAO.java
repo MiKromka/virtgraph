@@ -106,6 +106,7 @@ public class Neo4jDAO implements DataAccessObject {
 
 	public void createDatabase() {
 		LOGGER.info("Creating database");
+
 		grapDatabaseService = new GraphDatabaseFactory()
 				.newEmbeddedDatabase(DB_PATH);
 		indexManager = grapDatabaseService.index();
