@@ -23,26 +23,41 @@ public class Service implements Serializable {
 	private String runCommand;
 	private String stopCommand;
 	private boolean start;
-	private List<String> args;
+	private List<String> startArgs;
+	private List<String> stopArgs;
+
+	public List<String> getStartArgs() {
+		return startArgs;
+	}
+
+	public void setStartArgs(List<String> startArgs) {
+		this.startArgs = startArgs;
+	}
+
+	public List<String> getStopArgs() {
+		return stopArgs;
+	}
+
+	public void setStopArgs(List<String> stopArgs) {
+		this.stopArgs = stopArgs;
+	}
+
+	public List<String> getstartArgs() {
+		return startArgs;
+	}
+
 	@GraphId
 	Long id;
 
 	public Service(String name, String runCommand, String stopCommand,
-			boolean start, List<String> args) {
+			boolean start, List<String> startArgs, List<String> stopArgs) {
 		super();
 		this.name = name;
 		this.runCommand = runCommand;
 		this.stopCommand = stopCommand;
 		this.start = start;
-		this.args = args;
-	}
-
-	public List<String> getArgs() {
-		return args;
-	}
-
-	public void setArgs(List<String> args) {
-		this.args = args;
+		this.startArgs = startArgs;
+		this.stopArgs = stopArgs;
 	}
 
 	public Service() {
@@ -84,7 +99,8 @@ public class Service implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((args == null) ? 0 : args.hashCode());
+		result = prime * result
+				+ ((startArgs == null) ? 0 : startArgs.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result
@@ -109,11 +125,11 @@ public class Service implements Serializable {
 			return false;
 		}
 		Service other = (Service) obj;
-		if (args == null) {
-			if (other.args != null) {
+		if (startArgs == null) {
+			if (other.startArgs != null) {
 				return false;
 			}
-		} else if (!args.equals(other.args)) {
+		} else if (!startArgs.equals(other.startArgs)) {
 			return false;
 		}
 		if (id == null) {

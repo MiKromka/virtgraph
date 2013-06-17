@@ -22,59 +22,65 @@ import pl.edu.agh.iosr.virtgraph.model.VirtualMachine;
 @Path("/test")
 public class TestController {
 
-    @Autowired
-    StateProvider stateProvider;
+	@Autowired
+	StateProvider stateProvider;
 
-    @GET
-    @Path("/sampleservice")
-    @Produces("application/xml")
-    public Service sampleService(@PathParam("id") int id) {
-        LinkedList<Service> list = new LinkedList<Service>();
-        LinkedList<String> args = new LinkedList<String>();
-        args.add("start");
-        args.add("sshd");
-        return new Service("sshd", "/usr/bin/systemctl", "/usr/bin/systemctl",
-                true, args);
-    }
+	@GET
+	@Path("/sampleservice")
+	@Produces("application/xml")
+	public Service sampleService(@PathParam("id") int id) {
+		new LinkedList<Service>();
+		LinkedList<String> startArgs = new LinkedList<String>();
+		startArgs.add("start");
+		startArgs.add("sshd");
+		LinkedList<String> stopArgs = new LinkedList<String>();
+		stopArgs.add("stop");
+		stopArgs.add("sshd");
+		return new Service("sshd", "/usr/bin/systemctl", "/usr/bin/systemctl",
+				true, startArgs, stopArgs);
+	}
 
-    @GET
-    @Path("/vm")
-    @Produces("application/xml")
-    public VirtualMachine sampleVm() {
-        return new VirtualMachine("samplename", "sampleid", true);
+	@GET
+	@Path("/vm")
+	@Produces("application/xml")
+	public VirtualMachine sampleVm() {
+		return new VirtualMachine("samplename", "sampleid", true);
 
-    }
+	}
 
-    @GET
-    @Path("/hostlist")
-    @Produces("application/xml")
-    public HostList getHosts() {
-        LinkedList<Host> list = new LinkedList<Host>();
-        list.add(new Host("tomek-pc",
-                "http://localhost:8080/virtgraph/hypervisor/"));
-        HostList hlist = new HostList();
-        hlist.setHosts(list);
-        return hlist;
-    }
+	@GET
+	@Path("/hostlist")
+	@Produces("application/xml")
+	public HostList getHosts() {
+		LinkedList<Host> list = new LinkedList<Host>();
+		list.add(new Host("tomek-pc",
+				"http://localhost:8080/virtgraph/hypervisor/"));
+		HostList hlist = new HostList();
+		hlist.setHosts(list);
+		return hlist;
+	}
 
-    @GET
-    @Path("/vmlist")
-    @Produces("application/xml")
-    public VMList getVMList() {
-        return new VMList(stateProvider.getVMs());
-    }
+	@GET
+	@Path("/vmlist")
+	@Produces("application/xml")
+	public VMList getVMList() {
+		return new VMList(stateProvider.getVMs());
+	}
 
-    @GET
-    @Path("/servicelist")
-    @Produces("application/xml")
-    public ServiceList getServiceList() {
-        LinkedList<Service> list = new LinkedList<Service>();
-        LinkedList<String> args = new LinkedList<String>();
-        args.add("start");
-        args.add("sshd");
-        list.add(new Service("sshd", "/usr/bin/systemctl",
-                "/usr/bin/systemctl", true, args));
-        return new ServiceList(list);
-    }
+	@GET
+	@Path("/servicelist")
+	@Produces("application/xml")
+	public ServiceList getServiceList() {
+		LinkedList<Service> list = new LinkedList<Service>();
+		LinkedList<String> startArgs = new LinkedList<String>();
+		startArgs.add("start");
+		startArgs.add("sshd");
+		LinkedList<String> stopArgs = new LinkedList<String>();
+		stopArgs.add("stop");
+		stopArgs.add("sshd");
+		list.add(new Service("sshd", "/usr/bin/systemctl",
+				"/usr/bin/systemctl", false, startArgs, stopArgs));
+		return new ServiceList(list);
+	}
 
 }
