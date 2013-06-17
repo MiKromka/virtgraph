@@ -55,10 +55,6 @@ public class Service {
 		this.stopArgs = stopArgs;
 	}
 
-	public List<String> getArgs() {
-		return startArgs;
-	}
-
 	public Service() {
 	}
 

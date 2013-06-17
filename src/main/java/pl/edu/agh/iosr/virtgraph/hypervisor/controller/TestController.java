@@ -79,7 +79,7 @@ public class TestController {
 		stopArgs.add("stop");
 		stopArgs.add("sshd");
 		list.add(new Service("sshd", "/usr/bin/systemctl",
-				"/usr/bin/systemctl", true, startArgs, stopArgs));
+				"/usr/bin/systemctl", false, startArgs, stopArgs));
 		return new ServiceList(list);
 	}
 
