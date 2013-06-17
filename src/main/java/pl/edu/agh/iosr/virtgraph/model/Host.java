@@ -10,25 +10,36 @@ import org.springframework.data.neo4j.support.index.IndexType;
 @NodeEntity
 @XmlRootElement
 public class Host {
-	@GraphId
-	Long id;
+    @GraphId
+    Long id;
 
-	@Indexed(indexType = IndexType.FULLTEXT, indexName = "search")
-	private String name;
+    @Indexed(indexType = IndexType.FULLTEXT, indexName = "search")
+    private String name;
 
-	public String getName() {
-		return name;
-	}
+    private String address;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public Host(String name) {
-		this.name = name;
-	}
+    public String getAddress() {
+        return address;
+    }
 
-	public Host() {
-	}
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Host(String name, String address) {
+        this.name = name;
+        this.address = address;
+    }
+
+    public Host() {
+    }
 
 }

@@ -35,7 +35,8 @@ public class RESTServerCommunicator implements ServerCommunicator {
     @Override
     public String registerHost() throws NotRegisteredException {
         /* TODO: add sensible properties to the Host instance */
-        Host host = new Host(Properties.getHostName());
+        Host host = new Host(Properties.getHostName(), Properties
+                .getSelfAddress());
 
         URI baseURI = UriBuilder.fromUri(Properties.getServerAddress()).build();
         ClientConfig config = new DefaultClientConfig();

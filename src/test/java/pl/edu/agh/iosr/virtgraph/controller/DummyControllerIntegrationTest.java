@@ -12,18 +12,18 @@ import pl.edu.agh.iosr.virtgraph.properties.Properties;
 /* should defilitely use static imports, but fucking eclipse diapproves */
 public class DummyControllerIntegrationTest {
 
-	@Test
-	public void dummyTest() {
-		expect().body(hasXPath("/paragonZaLas/test[text()='test']")).when()
-				.get("/virtgraph/dummy/tryme/0");
-	}
+    @Test
+    public void dummyTest() {
+        expect().body(hasXPath("/paragonZaLas/test[text()='test']")).when()
+                .get("/virtgraph/dummy/tryme/0");
+    }
 
-	@Test
-	public void registerHostTest() {
-		Host host = new Host("HostName");
-		given().contentType("application/xml").request().body(host).expect()
-				.statusCode(201).when()
-				.post(Properties.getRelativeServerLocation());
-	}
+    @Test
+    public void registerHostTest() {
+        Host host = new Host("HostName", "HostAddress");
+        given().contentType("application/xml").request().body(host).expect()
+                .statusCode(201).when().post(
+                        Properties.getRelativeServerLocation());
+    }
 
 }
