@@ -1,5 +1,7 @@
 package pl.edu.agh.iosr.virtgraph.model;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.neo4j.graphdb.Direction;
@@ -14,7 +16,12 @@ import pl.edu.agh.iosr.virtgraph.dao.RelationTypes;
 
 @NodeEntity
 @XmlRootElement
-public class Host {
+public class Host implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@GraphId
 	Long id;
 
@@ -28,7 +35,7 @@ public class Host {
 	}
 
 	@RelatedTo(type = RelationTypes.IS_CONTAINED,
-			direction = Direction.OUTGOING)
+			direction = Direction.INCOMING)
 	private HostList hostList;
 
 	public void setHostList(HostList hostList) {

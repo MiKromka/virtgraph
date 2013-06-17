@@ -1,5 +1,6 @@
 package pl.edu.agh.iosr.virtgraph.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -13,7 +14,11 @@ import pl.edu.agh.iosr.virtgraph.dao.RelationTypes;
 
 @NodeEntity
 @XmlRootElement
-public class Service {
+public class Service implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 12L;
 	private String name;
 	private String runCommand;
 	private String stopCommand;
@@ -153,7 +158,7 @@ public class Service {
 	}
 
 	@RelatedTo(type = RelationTypes.IS_CONTAINED,
-			direction = Direction.OUTGOING)
+			direction = Direction.INCOMING)
 	private ServiceList serviceList;
 
 	public void setServiceList(ServiceList serviceList) {

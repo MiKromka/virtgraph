@@ -3,6 +3,10 @@ package pl.edu.agh.iosr.virtgraph.server.service;
 import pl.edu.agh.iosr.virtgraph.model.Host;
 import pl.edu.agh.iosr.virtgraph.model.HostList;
 import pl.edu.agh.iosr.virtgraph.model.ParagonZaLas;
+import pl.edu.agh.iosr.virtgraph.model.Service;
+import pl.edu.agh.iosr.virtgraph.model.ServiceList;
+import pl.edu.agh.iosr.virtgraph.model.VMList;
+import pl.edu.agh.iosr.virtgraph.model.VirtualMachine;
 
 public interface ServerService {
 	public ParagonZaLas zaplacZaLas(int ile);
@@ -11,4 +15,11 @@ public interface ServerService {
 
 	public HostList getHostList();
 
+	public String registerService(String hostName, String vmId, Service service);
+
+	public String registerVMForHost(String hostName, VirtualMachine vm);
+
+	public VMList getVMListForHost(String hostName);
+
+	public ServiceList getServiceList(String hostName, String vmId);
 }

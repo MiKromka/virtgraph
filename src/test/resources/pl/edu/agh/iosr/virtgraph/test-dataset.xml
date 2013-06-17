@@ -1,0 +1,37 @@
+<?xml version="1.0" ?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+	<key id="name" for="node" attr.name="name" attr.type="string"></key>
+	<key id="__type__" for="node" attr.name="__type__" attr.type="string"></key>
+	<graph id="G" edgedefault="directed">
+		
+		<node id="3">
+			<data key="__type__">pl.edu.agh.iosr.virtgraph.model.Host</data>
+			<data key="name">Host1</data>
+			<index name="__types__" key="className">pl.edu.agh.iosr.virtgraph.model.Host</index>
+		</node>
+
+		<node id="5">
+			<data key="__type__">pl.edu.agh.iosr.virtgraph.model.VMList</data>
+			<index name="__types__" key="className">pl.edu.agh.iosr.virtgraph.model.VMList</index>
+		</node>
+		
+		<node id="1">
+			<data key="__type__">pl.edu.agh.iosr.virtgraph.model.VirtualMachine</data>
+			<data key="name">VM1</data>
+			<index name="__types__" key="className">pl.edu.agh.iosr.virtgraph.model.VirtualMachine</index>
+		</node>
+		
+		<node id="4">
+			<data key="__type__">pl.edu.agh.iosr.virtgraph.model.VirtualMachine</data>
+			<data key="starship">VM2</data>
+			<index name="__types__" key="className">pl.edu.agh.iosr.virtgraph.model.VirtualMachine</index>
+		</node>
+		
+		<edge id="11" source="3" target="5" label="Runs"></edge>
+		<edge id="12" source="5" target="4" label="Contains"></edge>
+		<edge id="13" source="5" target="1" label="Contains"></edge>
+		
+	</graph>
+</graphml>

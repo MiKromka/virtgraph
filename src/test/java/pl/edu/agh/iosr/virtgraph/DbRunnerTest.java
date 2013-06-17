@@ -1,28 +1,28 @@
 package pl.edu.agh.iosr.virtgraph;
 
-import org.junit.After;
-import org.junit.Before;
+import org.junit.Assert;
 import org.junit.Test;
-import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.test.TestGraphDatabaseFactory;
+
+import pl.edu.agh.iosr.virtgraph.dao.Neo4jDAO;
+import pl.edu.agh.iosr.virtgraph.model.Host;
+import pl.edu.agh.iosr.virtgraph.model.HostList;
 
 public class DbRunnerTest {
 
-	private GraphDatabaseService graphDb;
-
-	@Before
-	public void prepareTestDatabase() {
-		this.graphDb = new TestGraphDatabaseFactory()
-				.newImpermanentDatabaseBuilder().newGraphDatabase();
-	}
-
-	@After
-	public void destroyTestDatabase() {
-		graphDb.shutdown();
-	}
+	private final Neo4jDAO dao = new Neo4jDAO();
 
 	@Test
-	public void shouldCreateDbGetAndRemoveData() {
+	public void shouldSaveAndRestoreHost() {
+		// given
+		String name = "hostName4";
+		Host host = new Host(name, "addr1");
 
+		// when
+		dao.addHost(name, host);
+		HostList list = dao.getHostList();
+
+		// then
+		Assert.assertTrue("HostList must contain inserted host: "
+				+ list.getHosts().size(), list.getHosts().contains(host));
 	}
 }

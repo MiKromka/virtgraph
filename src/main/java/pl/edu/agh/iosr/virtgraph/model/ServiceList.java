@@ -40,7 +40,7 @@ public class ServiceList {
 		services.add(service);
 	}
 
-	@RelatedTo(type = RelationTypes.IS_EXPOSED, direction = Direction.OUTGOING)
+	@RelatedTo(type = RelationTypes.IS_EXPOSED, direction = Direction.INCOMING)
 	private VirtualMachine virtualMachine;
 
 	public void setVirtualMachine(VirtualMachine virtualMachine) {

@@ -1,7 +1,14 @@
 package pl.edu.agh.iosr.virtgraph.dao;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.apache.commons.lang.SerializationUtils;
+import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.graphdb.index.Index;
@@ -15,6 +22,10 @@ import org.springframework.stereotype.Repository;
 
 import pl.edu.agh.iosr.virtgraph.model.Host;
 import pl.edu.agh.iosr.virtgraph.model.HostList;
+import pl.edu.agh.iosr.virtgraph.model.Service;
+import pl.edu.agh.iosr.virtgraph.model.ServiceList;
+import pl.edu.agh.iosr.virtgraph.model.VMList;
+import pl.edu.agh.iosr.virtgraph.model.VirtualMachine;
 
 @Repository
 public class Neo4jDAO implements DataAccessObject {
@@ -25,18 +36,23 @@ public class Neo4jDAO implements DataAccessObject {
 	private static final String SERVICE_PROPERTY_NAME = "serviceName";
 	private static final String VM_PROPERTY_NAME = "vmName";
 	private static final String NODE_PROPERTY_NAME = "nodeName";
+	private static final String OBJECT_PROPERTY = "nodeObject";
 
 	private GraphDatabaseService grapDatabaseService;
 	private IndexManager indexManager;
-	private Index<Node> computerNodes;
+	public Index<Node> hosts;
 	private Index<Node> virtualMachines;
 	private Index<Node> services;
 	RelationshipIndex nodeVmRelations;
 	RelationshipIndex vMServiceRelations;
 
-	public IndexHits<Node> queryNodes(String query) {
+	public Neo4jDAO() {
+		createDatabase();
+	}
+
+	public IndexHits<Node> queryHosts(String query) {
 		LOGGER.debug("Query: {}", query);
-		return computerNodes.query(query);
+		return hosts.query(query);
 	}
 
 	public IndexHits<Node> queryVMs(String query) {
@@ -53,30 +69,99 @@ public class Neo4jDAO implements DataAccessObject {
 		return GlobalGraphOperations.at(grapDatabaseService).getAllNodes();
 	}
 
-	public Node addService(String name) {
-		LOGGER.info("Adding service: {}", name);
-		Node service = grapDatabaseService.createNode();
-		service.setProperty(SERVICE_PROPERTY_NAME, name);
-		services.add(service, SERVICE_PROPERTY_NAME,
-				service.getProperty(SERVICE_PROPERTY_NAME));
-		return service;
+	public Node addService(String hostName, String vmId, Service service) {
+		Transaction tx = grapDatabaseService.beginTx();
+		try {
+			Iterable<Node> nodes = queryHosts("*:*");
+			Iterator<Node> it = nodes.iterator();
+			Node host = null;
+			while (it.hasNext()) {
+				host = it.next();
+				if (host.getProperty(NODE_PROPERTY_NAME, null).equals(hostName)) {
+					host = null;
+					break;
+				}
+			}
+			if (host == null) {
+				LOGGER.error("Couldn't find a host: {}!", hostName);
+				return null;
+			}
+
+			VirtualMachine vm = null;
+			for (Relationship r : host.getRelationships(
+					RunsRelationshipType.getInstance(), Direction.OUTGOING)) {
+				if (((VirtualMachine) SerializationUtils
+						.deserialize(((byte[]) r.getEndNode().getProperty(
+								OBJECT_PROPERTY, null)))).getId().equals(vmId)) {
+					vm = (VirtualMachine) r.getEndNode();
+					break;
+				}
+			}
+			if (vm == null) {
+				LOGGER.error("Couldn't find a vm: {}!", vmId);
+				return null;
+			}
+
+			Node s = grapDatabaseService.createNode();
+			s.setProperty(SERVICE_PROPERTY_NAME, service.getName());
+			s.setProperty(OBJECT_PROPERTY,
+					SerializationUtils.serialize(service));
+			services.add(s, SERVICE_PROPERTY_NAME,
+					s.getProperty(SERVICE_PROPERTY_NAME, null));
+			host.createRelationshipTo(s, ExposesRelationshipType.getInstance());
+			return s;
+		} finally {
+			tx.finish();
+		}
 	}
 
-	public Node addVM(String name) {
-		LOGGER.info("Adding VM: {}", name);
-		Node vm = grapDatabaseService.createNode();
-		vm.setProperty(VM_PROPERTY_NAME, name);
-		services.add(vm, VM_PROPERTY_NAME, vm.getProperty(VM_PROPERTY_NAME));
-		return vm;
+	public Node addVM(String id, String hostName, VirtualMachine virtualMachine) {
+		Transaction tx = grapDatabaseService.beginTx();
+		try {
+			Iterable<Node> nodes = queryHosts("*:*");
+			Iterator<Node> it = nodes.iterator();
+			Node host = null;
+			while (it.hasNext()) {
+				host = it.next();
+				if (host.getProperty(NODE_PROPERTY_NAME, null).equals(hostName)) {
+					host = null;
+					break;
+				}
+			}
+			if (host == null) {
+				LOGGER.error("Couldn't find a host: {}!", hostName);
+				return null;
+			}
+			LOGGER.info("Adding VM: {}", id);
+			Node vm = grapDatabaseService.createNode();
+			vm.setProperty(VM_PROPERTY_NAME, id);
+			vm.setProperty(OBJECT_PROPERTY,
+					SerializationUtils.serialize(virtualMachine));
+			virtualMachines.add(vm, VM_PROPERTY_NAME,
+					vm.getProperty(VM_PROPERTY_NAME, null));
+			host.createRelationshipTo(vm, RunsRelationshipType.getInstance());
+			return vm;
+		} finally {
+			tx.finish();
+		}
+
 	}
 
-	public Node addNode(String name) {
-		LOGGER.info("Adding node: {}", name);
-		Node node = grapDatabaseService.createNode();
-		node.setProperty(NODE_PROPERTY_NAME, name);
-		services.add(node, NODE_PROPERTY_NAME,
-				node.getProperty(NODE_PROPERTY_NAME));
-		return node;
+	public Node addHost(String name, Host host) {
+		Transaction tx = grapDatabaseService.beginTx();
+
+		try {
+			LOGGER.info("Adding node: {}", name);
+			Node node = grapDatabaseService.createNode();
+			node.setProperty(NODE_PROPERTY_NAME, name);
+
+			node.setProperty(OBJECT_PROPERTY,
+					SerializationUtils.serialize(host));
+			hosts.add(node, NODE_PROPERTY_NAME, name);
+			return node;
+		} finally {
+			tx.finish();
+		}
 	}
 
 	public Node getNodeWithProperty(String propertyName, String value) {
@@ -112,7 +197,7 @@ public class Neo4jDAO implements DataAccessObject {
 		indexManager = grapDatabaseService.index();
 		services = indexManager.forNodes("services");
 		virtualMachines = indexManager.forNodes("VMs");
-		computerNodes = indexManager.forNodes("nodes");
+		hosts = indexManager.forNodes("nodes");
 		vMServiceRelations = indexManager.forRelationships("vMService");
 		nodeVmRelations = indexManager.forRelationships("nodeVm");
 		LOGGER.info("Created database with node indexes: services, VMs, nodes; relationShopIndexes: node->VM and VM->Service");
@@ -137,14 +222,120 @@ public class Neo4jDAO implements DataAccessObject {
 	}
 
 	@Override
-	public int registerHost(Host host) {
-		// TODO Auto-generated method stub
-		return 0;
+	public String registerHost(Host host) {
+		System.out.println("Adding host " + host.getName());
+		addHost(host.getName(), host);
+		return host.getName();
 	}
 
 	@Override
 	public HostList getHostList() {
-		// TODO Auto-generated method stub
-		return null;
+		System.out.println("Getting HostList");
+		List<Host> list = new ArrayList<Host>();
+		Iterable<Node> nodes = queryHosts("*:*");
+		// hosts.get(NODE_PROPERTY_NAME, NODE_PROPERTY_NAME);
+		// queryHosts("*:*");
+		System.out.println("After query" + nodes);
+		for (Node node : nodes) {
+			System.out.println(node.getId());
+			for (String propKey : node.getPropertyKeys()) {
+				System.out.println(propKey);
+			}
+			Host host = (Host) SerializationUtils.deserialize(((byte[]) node
+					.getProperty(OBJECT_PROPERTY, null)));
+			list.add(host);
+		}
+		HostList hl = new HostList();
+		hl.setHosts(list);
+		return hl;
+	}
+
+	@Override
+	public String registerService(String hostName, String vmId, Service service) {
+		addService(hostName, vmId, service);
+		return service.getName();
+	}
+
+	@Override
+	public ServiceList getServiceList() {
+		Iterable<Node> nodes = queryServices("*:*");
+		ServiceList sl = new ServiceList();
+		for (Node node : nodes) {
+			Service host = (Service) SerializationUtils
+					.deserialize(((byte[]) node.getProperty(OBJECT_PROPERTY,
+							null)));
+			sl.addService(host);
+		}
+		return sl;
+	}
+
+	@Override
+	public String registerVMForHost(String hostName, VirtualMachine vm) {
+		addVM(vm.getId(), hostName, vm);
+		return vm.getId();
+	}
+
+	@Override
+	public VMList getVMListForHost(String hostName) {
+		Iterable<Node> nodes = queryHosts("*:*");
+		Iterator<Node> it = nodes.iterator();
+		Node host = null;
+		while (it.hasNext()) {
+			host = it.next();
+			if (host.getProperty(NODE_PROPERTY_NAME, null).equals(hostName)) {
+				host = null;
+				break;
+			}
+		}
+		if (host == null) {
+			LOGGER.error("Couldn't find a host: {}!", hostName);
+			return null;
+		}
+
+		VMList vmList = new VMList();
+		for (Relationship r : host.getRelationships(
+				RunsRelationshipType.getInstance(), Direction.OUTGOING)) {
+			vmList.addVm((VirtualMachine) r.getEndNode());
+		}
+		return vmList;
+	}
+
+	@Override
+	public ServiceList getServiceList(String hostName, String vmId) {
+		Iterable<Node> nodes = queryHosts("*:*");
+		Iterator<Node> it = nodes.iterator();
+		Node host = null;
+		while (it.hasNext()) {
+			host = it.next();
+			if (host.getProperty(NODE_PROPERTY_NAME, null).equals(hostName)) {
+				host = null;
+				break;
+			}
+		}
+		if (host == null) {
+			LOGGER.error("Couldn't find a host: {}!", hostName);
+			return null;
+		}
+
+		Node vm = null;
+		for (Relationship r : host.getRelationships(
+				RunsRelationshipType.getInstance(), Direction.OUTGOING)) {
+			if (((VirtualMachine) SerializationUtils.deserialize(((byte[]) r
+					.getEndNode().getProperty(OBJECT_PROPERTY, null)))).getId()
+					.equals(vmId)) {
+				vm = r.getEndNode();
+				break;
+			}
+		}
+		if (vm == null) {
+			LOGGER.error("Couldn't find a vm: {}!", vmId);
+			return null;
+		}
+		ServiceList sl = new ServiceList();
+		for (Relationship r : vm.getRelationships(
+				ExposesRelationshipType.getInstance(), Direction.OUTGOING)) {
+			sl.addService((Service) r.getEndNode());
+		}
+		return sl;
 	}
 }
