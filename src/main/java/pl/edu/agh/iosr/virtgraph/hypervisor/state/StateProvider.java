@@ -9,17 +9,17 @@ import pl.edu.agh.iosr.virtgraph.model.VirtualMachine;
 
 public interface StateProvider {
 
-    public String getHostAddress() throws NotRegisteredException;
+	public String getHostAddress() throws NotRegisteredException;
 
-    public List<Service> getServices();
+	public List<Service> getServices();
 
-    public Collection<VirtualMachine> getVMs();
+	public Collection<VirtualMachine> getVMs();
 
-    public VirtualMachine getVM(String id);
+	public VirtualMachine getVM(String id);
 
-    public void updateService(Service service);
+	public void updateService(String vmid, Service service);
 
-    public void updateVM(VirtualMachine vm);
+	public void updateVM(VirtualMachine vm);
 
-    public void updateState();
+	public void updateState();
 }

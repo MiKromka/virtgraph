@@ -1,6 +1,7 @@
 package pl.edu.agh.iosr.virtgraph.hypervisor.state;
 
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -59,6 +60,23 @@ public class StateProviderImpl implements StateProvider {
 		if (Properties.isEnableVmRegistration()) {
 			for (VirtualMachine vm : VMs.values()) {
 				srvComm.registerVm(vm);
+				// FIXME!! use some reasonable service reposiory, maybe a
+				// database?
+				if (Properties.isEnableServiceRegistration()
+						&& vm.getName().equals("virtgraph-slave-arch")) {
+					LinkedList<String> startArgs = new LinkedList<String>();
+					startArgs.add("start");
+					startArgs.add("sshd");
+					LinkedList<String> stopArgs = new LinkedList<String>();
+					stopArgs.add("stop");
+					stopArgs.add("sshd");
+					Service service = new Service("sshd", "/usr/bin/systemctl",
+							"/usr/bin/systemctl", false, startArgs, stopArgs);
+					srvComm.registerService(vm.getId(), service);
+				} else {
+					LOGGER.debug("ENABLE_SERVICE_REGISTRATION property is not set."
+							+ "Not registering vms");
+				}
 			}
 
 		} else {
@@ -95,9 +113,16 @@ public class StateProviderImpl implements StateProvider {
 	}
 
 	@Override
-	public void updateService(Service service) {
+	public void updateService(String vmid, Service service) {
 		// TODO Auto-generated method stub
 		System.out.println("StateProvider received a service update");
+
+		try {
+			srvComm.registerService(vmid, service);
+		} catch (NotRegisteredException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		updateState();
 
 	}
@@ -113,6 +138,12 @@ public class StateProviderImpl implements StateProvider {
 	@Override
 	public void updateVM(VirtualMachine vm) {
 		// TODO Auto-generated method stub
+		try {
+			srvComm.registerVm(vm);
+		} catch (NotRegisteredException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		System.out.println("StateProvider received a vm update");
 		updateState();
 

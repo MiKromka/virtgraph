@@ -15,55 +15,56 @@ import pl.edu.agh.iosr.virtgraph.model.Service;
 @Component
 @Scope("prototype")
 public class ServiceRunnerThread implements Runnable {
-    private final static Logger LOGGER = LoggerFactory
-            .getLogger(ServiceRunnerThread.class);
+	private final static Logger LOGGER = LoggerFactory
+			.getLogger(ServiceRunnerThread.class);
 
-    @Autowired
-    VirtualboxManagerWrapper vBoxWrapper;
+	@Autowired
+	VirtualboxManagerWrapper vBoxWrapper;
 
-    @Autowired
-    StateProvider stateProvider;
+	@Autowired
+	StateProvider stateProvider;
 
-    public String getVmId() {
-        return vmId;
-    }
+	public String getVmId() {
+		return vmId;
+	}
 
-    public void setVmId(String vmId) {
-        this.vmId = vmId;
-    }
+	public void setVmId(String vmId) {
+		this.vmId = vmId;
+	}
 
-    public Service getService() {
-        return service;
-    }
+	public Service getService() {
+		return service;
+	}
 
-    public void setService(Service service) {
-        this.service = service;
-    }
+	public void setService(Service service) {
+		this.service = service;
+	}
 
-    private String vmId;
-    private Service service;
+	private String vmId;
+	private Service service;
 
-    public ServiceRunnerThread() {
-        //
-    }
+	public ServiceRunnerThread() {
+		//
+	}
 
-    public ServiceRunnerThread(String vmId, Service service) {
-        this.vmId = vmId;
-        this.service = service;
-    }
+	public ServiceRunnerThread(String vmId, Service service) {
+		this.vmId = vmId;
+		this.service = service;
+	}
 
-    @Override
-    public void run() {
-        // TODO: implement me: run the service, notify the StateProvider
-        LOGGER.debug("Started a thread for running a service");
-        System.out.println("Service runner thread runs...");
-        boolean success = false;
-        try {
-            success = vBoxWrapper.toggleService(vmId, service);
-        } catch (NoSuchVMException e) {
-            e.printStackTrace();
-        }
-        if (success)
-            stateProvider.updateService(service);
-    }
+	@Override
+	public void run() {
+		// TODO: implement me: run the service, notify the StateProvider
+		LOGGER.debug("Started a thread for running a service");
+		System.out.println("Service runner thread runs...");
+		boolean success = false;
+		try {
+			success = vBoxWrapper.toggleService(vmId, service);
+		} catch (NoSuchVMException e) {
+			e.printStackTrace();
+		}
+		if (success) {
+			stateProvider.updateService(vmId, service);
+		}
+	}
 }

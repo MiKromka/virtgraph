@@ -41,6 +41,13 @@ public class TestController {
 	}
 
 	@GET
+	@Path("/samplehost")
+	@Produces("application/xml")
+	public Host sampleHost() {
+		return new Host("fakename", "fakeaddr");
+	}
+
+	@GET
 	@Path("/vm")
 	@Produces("application/xml")
 	public VirtualMachine sampleVm() {
