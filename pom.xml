@@ -30,14 +30,6 @@
     </reporting>
 
     <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-            </resource>
-            <resource>
-                <directory>src/test/resources</directory>
-            </resource>
-        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -297,6 +289,11 @@
             <artifactId>spring-data-neo4j-aspects</artifactId>
             <version>${spring-data-neo4j.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>3.1.2.RELEASE</version>
+        </dependency>
 
         <!-- virtualbox deps -->
         <dependency>
@@ -330,8 +327,31 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.3</version>
+            <version>4.11</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.lordofthejars</groupId>
+            <artifactId>nosqlunit-neo4j</artifactId>
+            <version>0.7.5</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>neo4j-kernel</artifactId>
+                    <groupId>org.neo4j</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>neo4j-cypher</artifactId>
+                    <groupId>org.neo4j</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>neo4j-server</artifactId>
+                    <groupId>org.neo4j.app</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>neo4j-cypher-plugin</artifactId>
+                    <groupId>org.neo4j.server.plugin</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
     <repositories>

@@ -41,8 +41,8 @@ public class Neo4jDAO implements DataAccessObject {
 	private GraphDatabaseService grapDatabaseService;
 	private IndexManager indexManager;
 	public Index<Node> hosts;
-	private Index<Node> virtualMachines;
-	private Index<Node> services;
+	public Index<Node> virtualMachines;
+	public Index<Node> services;
 	RelationshipIndex nodeVmRelations;
 	RelationshipIndex vMServiceRelations;
 

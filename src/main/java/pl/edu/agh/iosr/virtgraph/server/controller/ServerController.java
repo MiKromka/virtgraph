@@ -16,7 +16,6 @@ import org.springframework.stereotype.Controller;
 
 import pl.edu.agh.iosr.virtgraph.model.Host;
 import pl.edu.agh.iosr.virtgraph.model.HostList;
-import pl.edu.agh.iosr.virtgraph.model.ParagonZaLas;
 import pl.edu.agh.iosr.virtgraph.model.Service;
 import pl.edu.agh.iosr.virtgraph.model.ServiceList;
 import pl.edu.agh.iosr.virtgraph.model.VMList;
@@ -30,14 +29,6 @@ public class ServerController {
 			.getLogger(ServerController.class);
 	@Autowired
 	ServerService serverService;
-
-	@GET
-	@Produces("application/xml")
-	@Path("/tryme/{ile}")
-	public ParagonZaLas zaplacZaLas(@PathParam("ile") int ile) {
-		LOGGER.info("Place za las {}", ile);
-		return serverService.zaplacZaLas(ile);
-	}
 
 	@GET
 	@Path("/hosts/{hostName}/vms/{vmId}/services")

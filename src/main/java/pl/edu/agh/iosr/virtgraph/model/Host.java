@@ -111,7 +111,7 @@ public class Host implements Serializable {
 
 	@Fetch
 	@RelatedTo(type = RelationTypes.RUNS, direction = Direction.OUTGOING)
-	private VMList vms;
+	private final VMList vms = new VMList();
 
 	public VMList vms() {
 		return vms;

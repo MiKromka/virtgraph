@@ -15,7 +15,6 @@
 
 
 
-    <!-- currently just a dummy servlet to serve as an example -->
     <servlet>
         <servlet-name>appServlet</servlet-name>
         <servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
