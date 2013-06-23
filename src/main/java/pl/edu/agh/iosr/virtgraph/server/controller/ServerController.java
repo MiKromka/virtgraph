@@ -41,6 +41,26 @@ public class ServerController {
 	}
 
 	@GET
+	@Path("/services")
+	@Produces("application/xml")
+	@Consumes("application/xml")
+	public HostList getHostListWithService(Service service) {
+		LOGGER.info("returning HostList with service:{} ", service.getName());
+		return serverService.getHostListWithService(service);
+	}
+
+	@GET
+	@Path("/services/{hostName}/vms")
+	@Produces("application/xml")
+	@Consumes("application/xml")
+	public VMList getVMListForHostWithService(Service service,
+			@PathParam("hostName") String hostName) {
+		LOGGER.info("returning VMList with service:{} for host:{} ",
+				service.getName(), hostName);
+		return serverService.getVMListForHostWithService(service, hostName);
+	}
+
+	@GET
 	@Path("/hosts/{hostName}/vms")
 	@Produces("application/xml")
 	public VMList getVMs(@PathParam("hostName") String hostName) {

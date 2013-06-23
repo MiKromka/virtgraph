@@ -23,6 +23,7 @@ public class ServerServiceImpl implements ServerService {
 	@Override
 	public String registerHost(Host host) {
 		String hostName = dao.registerHost(host);
+		LOGGER.debug("Registering host with name: {}", hostName);
 		return Properties.getServerAddress() + "hosts/" + hostName;
 	}
 
@@ -53,6 +54,16 @@ public class ServerServiceImpl implements ServerService {
 	@Override
 	public ServiceList getServiceList(String hostName, String vmId) {
 		return dao.getServiceList(hostName, vmId);
+	}
+
+	@Override
+	public HostList getHostListWithService(Service service) {
+		return dao.getHostListWithService(service);
+	}
+
+	@Override
+	public VMList getVMListForHostWithService(Service service, String hostName) {
+		return dao.getVMListForHostWithService(service, hostName);
 	}
 
 }

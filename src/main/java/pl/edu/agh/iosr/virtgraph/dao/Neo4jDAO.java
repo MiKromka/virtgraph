@@ -338,4 +338,16 @@ public class Neo4jDAO implements DataAccessObject {
 		}
 		return sl;
 	}
+
+	@Override
+	public HostList getHostListWithService(Service service) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public VMList getVMListForHostWithService(Service service, String hostName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

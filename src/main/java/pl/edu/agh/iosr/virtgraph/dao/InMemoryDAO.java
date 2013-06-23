@@ -1,5 +1,6 @@
 package pl.edu.agh.iosr.virtgraph.dao;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -33,19 +34,13 @@ public class InMemoryDAO implements DataAccessObject {
 
 	@Override
 	public String registerService(String hostName, String vmId, Service service) {
-		services.put(hostName + vmId + service.getName(), service);
+		services.put(hostName + "#" + vmId + "#" + service.getName(), service);
 		return service.getName();
 	}
 
 	@Override
-	public ServiceList getServiceList() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public String registerVMForHost(String hostName, VirtualMachine vm) {
-		vms.put(hostName + vm.getId(), vm);
+		vms.put(hostName + "#" + vm.getId(), vm);
 		return vm.getId();
 	}
 
@@ -64,11 +59,42 @@ public class InMemoryDAO implements DataAccessObject {
 	public ServiceList getServiceList(String hostName, String vmId) {
 		ServiceList serviceList = new ServiceList();
 		for (Entry<String, Service> entries : services.entrySet()) {
-			if (entries.getKey().startsWith(hostName + vmId)) {
+			if (entries.getKey().startsWith(hostName + "#" + vmId)) {
 				serviceList.addService(entries.getValue());
 			}
 		}
 		return serviceList;
 	}
 
+	@Override
+	public HostList getHostListWithService(Service service) {
+		HostList hl = new HostList();
+		for (Entry<String, Service> entry : services.entrySet()) {
+			// hostName#vmId#serviceName
+			String[] tmp = entry.getKey().split("#");
+			if (service.equals(entry.getValue())) {
+				hl.addHost(hosts.get(tmp[0]));
+			}
+		}
+
+		return hl;
+	}
+
+	@Override
+	public VMList getVMListForHostWithService(Service service, String hostName) {
+		VMList vmlist = new VMList();
+		for (Entry<String, Service> entry : services.entrySet()) {
+			// hostName#vmId#serviceName
+			String[] tmp = entry.getKey().split("#");
+			if (service.equals(entry.getValue()) && tmp[0].equals(hostName)) {
+				vmlist.addVm(vms.get(tmp[1]));
+			}
+		}
+		return vmlist;
+	}
+
+	@Override
+	public ServiceList getServiceList() {
+		return new ServiceList(new ArrayList<Service>(services.values()));
+	}
 }

@@ -19,4 +19,8 @@ public interface ServerService {
 	public VMList getVMListForHost(String hostName);
 
 	public ServiceList getServiceList(String hostName, String vmId);
+
+	public HostList getHostListWithService(Service service);
+
+	public VMList getVMListForHostWithService(Service service, String hostName);
 }
