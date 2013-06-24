@@ -5,7 +5,27 @@
                     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
                     http://www.springframework.org/schema/security 
                     http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+                    
+	<http create-session="stateless" entry-point-ref="authenticationEntryPoint" authentication-manager-ref="authenticationManager">
+	    <custom-filter ref="customRestFilter" position="BASIC_AUTH_FILTER" />
+	    <intercept-url pattern="/**" access="ROLE_USER" />
+	</http>
+	
+	<beans:bean id="authenticationEntryPoint" class="org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint">
+	    <beans:property name="realmName" value="Not Authorized" />
+	</beans:bean>
+	
+	<beans:bean id="customRestFilter" class="pl.edu.agh.iosr.virtgraph.security.CustomRestSecurityFilter">
+	    <beans:constructor-arg name="authenticationManager" ref="authenticationManager" />
+	</beans:bean>
+	
+	<authentication-manager alias="authenticationManager">
+	    <authentication-provider ref="restAuthenticationProvider" />
+	</authentication-manager>
+	
+	<beans:bean id="restAuthenticationProvider" class="pl.edu.agh.iosr.virtgraph.security.RestAuthenticationProvider" />
 
+<!--     
     <http use-expressions="true">
 	    <intercept-url pattern="/hypervisor/**" access="isAuthenticated()" />
 	    <intercept-url pattern="/server/**" access="isAuthenticated()" />
@@ -20,4 +40,5 @@
             </user-service>
         </authentication-provider>
     </authentication-manager>
-</beans:beans> 
+ -->
+ </beans:beans> 
